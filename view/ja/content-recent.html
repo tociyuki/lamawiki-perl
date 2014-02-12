@@ -1,0 +1,7 @@
+
+<ul class="content-recent">
+{{FOR.1 item IN page rel}}
+<li>{{item posted YMDHM}} <a href="{{item LOCATION}}">{{item title}}</a>{{IF.1 item summary}} - {{item summary}}{{ENDIF.1}}</li>
+{{ENDFOR.1}}
+</ul>
+

@@ -1,0 +1,117 @@
+# 21.layout.t fixtures
+---
+- !titles
+  id: 1
+  title: Top
+  rev: 1
+  summary: now testing
+  content: |
+
+    <h2>now testing</h2>
+
+- !sources
+  rev: 1
+  id: 1
+  posted: !!timestump 2014-01-02T03:01:00
+  remote: carol
+  source: |
+    # now testing
+
+- !titles
+  id: 2
+  title: InterWikiName
+  rev: 2
+  summary: interwiki test definitions
+  content: |
+
+    <h2>interwiki test definitions</h2>
+
+- !sources
+  rev: 2
+  id: 2
+  posted: !!timestump 2014-01-02T03:02:00
+  remote: carol
+  source: |
+    # interwiki test definitions
+
+- !titles
+  id: 3
+  title: All
+  rev: 0
+  summary:
+  content:
+
+- !titles
+  id: 4
+  title: Recent
+  rev: 0
+  summary:
+  content:
+
+- !titles
+  id: 5
+  title: Protect
+  rev: 3
+  summary: protect page
+  content: |
+
+    <h2>protect page</h2>
+
+- !sources
+  rev: 3
+  id: 5
+  posted: !!timestump 2014-01-02T03:03:00
+  remote: alice
+  source: |
+    # protect page
+
+- !titles
+  id: 6
+  title: Private
+  rev: 4
+  summary: private page
+  content: |
+
+    <h2>private page</h2>
+
+- !sources
+  rev: 4
+  id: 6
+  posted: !!timestump 2014-01-02T03:04:00
+  remote: carol
+  source: |
+    # private page
+
+- !titles
+  id: 7
+  title: Public
+  rev: 5
+  summary: public page
+  content: |
+
+    <h2>public page</h2>
+
+- !sources
+  rev: 5
+  id: 7
+  posted: !!timestump 2014-01-02T03:05:00
+  remote: alice
+  source: |
+    # public page
+
+- !cookies
+  sesskey: c40ikp9wh0oM3LjVX3bF5GQT5pn3L9AD07kgLMVCyZA4ujPYF5zWuyumyffnUUYIX
+  name: alice
+  token: cYoAWaS3vqCdiO3f2MbQW3bs7GqFJ3YkrEN5qtiaFEr888D8BSS4kBZaehS366gM7
+  posted: !!timestump 2014-01-02T04:01:00
+  remote: 192.168.1.2
+  expires: !!timestump 2014-01-02T16:01:00
+
+- !cookies
+  sesskey: cM7JdZSBY5Y2iD0aAgRTTIxjgoBlul50h1wc53iXmcCl1DbW2pwKxlTYBezem5HfU
+  name: carol
+  token: cMhbbLZiSwJSB3npECi9vEczBEN7rRr1rDDa2FaEpRIjjP3gqkJyW9vFdOU93WCL1
+  posted: !!timestump 2014-01-02T04:02:00
+  remote: 192.168.1.1
+  expires: !!timestump 2014-01-02T16:02:00
+

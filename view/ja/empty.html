@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex,nofollow" />
+<title>{{page title}}</title>
+<link rel="stylesheet" type="text/css" href="{{STATIC}}/style.css" />
+</head>
+<body>
+<header>
+<h1><a href="{{page LOCATION}}">{{page title}}</a></h1>
+</header>
+
+<aside class="notyet">未記入</aside>
+
+<nav class="c">
+<table><tr>
+<td><form method="GET" action="{{DEFAULT LOCATION}}">
+<input type="submit" value=" トップ " />
+</form></td>
+{{IF.1 page INSERT? }}
+<td><form method="POST" action="{{SCRIPT}}/" enctype="multipart/form-data">
+<input type="hidden" name="c" value="e" />
+<input type="hidden" name="q" value="{{page title HTMLALL}}" />
+<input type="submit" value=" 編集 " />
+</form></td>
+{{ENDIF.1}}
+<td><form method="GET" action="{{ALL LOCATION}}">
+<input type="submit" value=" 一覧 " />
+</form></td>
+<td><form method="GET" action="{{RECENT LOCATION}}">
+<input type="submit" value=" 最近の更新 " />
+</form></td>
+{{IF.1 user}}
+<td>{{user name}} <a href="{{SIGNOUT}}">サインアウト</a></td>
+{{ENDIF.1}}
+</tr></table>
+</nav>
+</body>
+</html>
+

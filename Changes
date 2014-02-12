@@ -1,0 +1,33 @@
+Revision history for Lamawiki
+
+0.01    Wed Feb 12 06:08:26 2014 UTC
+
+    - wiki.cgi PSGI application or CGI script.
+    - GET /:id or GET /?:title with default.html.
+    - POST {c:e, q:title} with edit.html.
+    - POST {c:w, q:title, r:rev, e:token, t:source} writes source.
+    - GET /:id/history with history.html.
+    - GET /:id/:rev with rev.html and diff with javascript.
+    - GET /:all_id list by title.
+    - GET /:recent_id list by recent changes.
+    - GET /?remote=:name with remote.html
+    - GET /signin and POST /signin.
+    - GET /signout.
+    - Lamawiki/Tokenbucket.pm can limit periodical atack.
+    - Lamawiki/Htpasswd.pm can check authentications with htpasswd file
+    - Lamawiki/Capability.pm can authorize access control.
+    - Lamawiki/Interwiki.pm can reload and resolve interwikiname server.
+    - Lamawiki/Converter.pm can convert paragraphs, headings,
+      unordered list, ordered list, define list, blockquote, horizontal rule,
+      verbatim, wikiname, inplace uri, nowiki, em emphasis, strong emphasis,
+      figure, and wiki layout.
+    - Lamawiki/Layout.pm can layout include, index, referer, toc, and nav.
+    - Lamawiki/Liq.pm template engine.
+    - Lamawiki/Sqlite.pm and Lamawiki/Database.pm sql module.
+    - Lamawiki/Strftime.pm generic strftime function.
+    - TABLE titles (id,title,rev,summary,content).
+    - TABLE sources (rev,id,posted,remote,source).
+    - TABLE relates (id,to_id,n).
+    - TABLE cookies (sesskey,name,token,posted,remote,expires).
+    - TABLE tbf (remote,credit).
+

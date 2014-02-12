@@ -1,0 +1,9 @@
+
+<ul class="layout-index">
+{{ IF.1 title }}<h1>{{title}}</h1>
+{{ ENDIF.1 }}
+{{ FOR.1 x IN list }}
+<li><a href="{{x LOCATION}}">{{x title}}</a></li>
+{{ ENDFOR.1 }}
+</ul>
+

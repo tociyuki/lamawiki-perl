@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex,nofollow" />
+<title>編集履歴 {{page title}}</title>
+<link rel="stylesheet" type="text/css" href="{{STATIC}}/style.css" />
+</head>
+<body>
+<header>
+<h1>編集履歴 <a href="{{page LOCATION}}">{{page title}}</a></h1>
+</header>
+
+<ul class="history">
+{{FOR.1 item IN page rel}}
+<li>{{item posted YMDHM}} <a href="{{item REVISION}}">リビジョン {{item rev}}</a>
+(更新者 <a href="{{item remote REMOTE}}">{{item remote}}</a>)</li>
+{{ENDFOR.1}}
+</ul>
+
+<nav class="c">
+<table><tr>
+<td><form method="GET" action="{{DEFAULT LOCATION}}">
+<input type="submit" value=" トップ " />
+</form></td>
+<td><form method="GET" action="{{page HISTORY}}">
+<input type="submit" value=" 編集履歴 " />
+</form></td>
+<td><form method="GET" action="{{ALL LOCATION}}">
+<input type="submit" value=" 一覧 " />
+</form></td>
+<td><form method="GET" action="{{RECENT LOCATION}}">
+<input type="submit" value=" 最近の更新 " />
+</form></td>
+{{IF.1 user}}
+<td>{{user name}} <a href="{{SIGNOUT}}">サインアウト</a></td>
+{{ENDIF.1}}
+</tr></table>
+</nav>
+</body>
+</html>
+

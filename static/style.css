@@ -1,0 +1,72 @@
+body,td,th { font-family: sans-serif; line-height: 1.5 }
+
+p,dt { margin-left: 8px }
+pre { padding-left: 32px }
+abbr { border-bottom: 0px }
+
+a img { border: 0 }
+a { text-decoration: none }
+a:link { color: #0000FF }
+a:visited { color: #550088 }
+a:hover { color: #CC0000; text-decoration: underline }
+a:active { color: #FF0000; text-decoration: none }
+
+header h1 a:link { color: black }
+header h1 a:visited { color: black }
+
+#source { margin-left: 32px; margin-right: 32px; font-family: monospace }
+#source div.line { color: #111111 }
+#source div.ins { background-color: #ddffdd }
+#source div.del { background-color: #ffdddd }
+
+ins { text-decoration: none; background-color: #ddffdd; }
+del { text-decoration: none; background-color: #ffdddd; }
+
+#diff-sources { display: none }
+#diff-info { display: none }
+#diff-bar0, #diff-bar1, #diff-bar2, #diff-bar3, #diff-bar4 { color: #999999 }
+
+#conflict-merge { display: none }
+#conflict-fail { display: none }
+#conflict-marker { display: none }
+
+hr {
+  border: solid #777777;
+  border-width: 0 0 1px 0;
+  height: 1px;
+  clear: both;
+}
+
+nav.nav ul {
+  text-align: center;
+  padding-left: 12px; padding-right: 12px;
+  margin-top: 6px; margin-bottom: 6px;
+}
+nav.nav .prev { display: inline; float:left  }
+nav.nav .next { display: inline; float:right }
+nav.nav .parent { display: inline }
+
+aside.notyet {
+  width: 80%;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 16px;
+  text-align: center;
+  background-color: #eeeeee;
+}
+
+.posted { text-align: right }
+
+nav.c {
+    border-top: solid 1px #777777;
+}
+
+nav.c input[type="submit"] {
+  margin: 0px;
+  padding: 1px;
+  background-color: #eeeeee;
+  border: solid 1px #777777;
+}
+

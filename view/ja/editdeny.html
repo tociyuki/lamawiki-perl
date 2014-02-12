@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex,nofollow" />
+<title>保存不許可 {{page title}}</title>
+<link rel="stylesheet" type="text/css" href="{{STATIC}}/style.css" />
+</head>
+<body>
+<header>
+<h1>保存不許可 <a href="{{page LOCATION}}">{{page title}}</a></h1>
+</header>
+
+<p><textarea name="t" style="width: 100%; height: 20em">{{page source HTMLALL}}</textarea></p>
+
+<nav class="c">
+<table><tr>
+<td><form method="GET" action="{{DEFAULT LOCATION}}">
+<input type="submit" value=" トップ " />
+</form></td>
+{{IF.1 page HISTORY? }}
+<td><form method="GET" action="{{page HISTORY}}">
+<input type="submit" value=" 編集履歴 " />
+</form></td>
+{{ENDIF.1}}
+<td><form method="GET" action="{{ALL LOCATION}}">
+<input type="submit" value=" 一覧 " />
+</form></td>
+<td><form method="GET" action="{{RECENT LOCATION}}">
+<input type="submit" value=" 最近の更新 " />
+</form></td>
+{{IF.1 user}}
+<td>{{user name}} <a href="{{SIGNOUT}}">サインアウト</a></td>
+{{ENDIF.1}}
+</tr></table>
+</nav>
+</body>
+</html>
+

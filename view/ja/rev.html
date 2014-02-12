@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex,nofollow" />
+<title>原稿 {{page title}} リビジョン {{page rev}}</title>
+<link rel="stylesheet" type="text/css" href="{{STATIC}}/style.css" />
+<script type="text/javascript" src="{{STATIC}}/diff3.js"></script>
+<script type="text/javascript" src="{{STATIC}}/rev-diff.js"></script>
+</head>
+<body>
+<header>
+<h1>原稿 <a href="{{page LOCATION}}">{{page title}}</a> リビジョン {{page rev}}</h1>
+</header>
+
+<p id="diff-info"><span id="diff-bar0">&#9632;</span><span id="diff-bar1">&#9632;</span><span id="diff-bar2">&#9632;</span><span id="diff-bar3">&#9632;</span><span id="diff-bar4">&#9632;</span>
+<span id="diff-nins">0</span> 行挿入 &amp; <span id="diff-ndel">0</span> 行削除</p>
+
+<div id="source">
+{{FOR.1 line IN page source LINES}}
+<div class="line">{{line HTMLALL ENSP}}</div>
+{{ENDFOR.1}}
+</div>
+
+<div id="diff-sources">
+<textarea id="prev-text">{{prev source HTMLALL}}</textarea>
+<textarea id="page-text">{{page source HTMLALL}}</textarea>
+</div>
+
+<footer>
+<p class="posted"><a class="self" href="{{page REVISION}}">リビジョン {{page rev}} : {{page posted YMDHM}}</a>{{IF.1 prev posted}}<br />
+<a class="prev" href="{{prev REVISION}}">一つ前 : {{prev posted YMDHM}}</a>{{ENDIF.1}}</p>
+</footer>
+
+<nav class="c">
+<table><tr>
+<td><form method="GET" action="{{DEFAULT LOCATION}}">
+<input type="submit" value=" トップ " />
+</form></td>
+{{IF.1 page EDIT? }}
+<td><form method="POST" action="{{SCRIPT}}/" enctype="multipart/form-data">
+<input type="hidden" name="c" value="e" />
+<input type="hidden" name="q" value="{{page title HTMLALL}}" />
+<input type="hidden" name="r" value="{{page rev HTMLALL}}" />
+<input type="submit" value=" これを元に編集 " />
+</form></td>
+{{ENDIF.1}}
+<td><form method="GET" action="{{page HISTORY}}">
+<input type="submit" value=" 編集履歴 " />
+</form></td>
+<td><form method="GET" action="{{ALL LOCATION}}">
+<input type="submit" value=" 一覧 " />
+</form></td>
+<td><form method="GET" action="{{RECENT LOCATION}}">
+<input type="submit" value=" 最近の更新 " />
+</form></td>
+{{IF.1 user}}
+<td>{{user name}} <a href="{{SIGNOUT}}">サインアウト</a></td>
+{{ENDIF.1}}
+</tr></table>
+</nav>
+</body>
+</html>
+

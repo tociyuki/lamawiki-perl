@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="robots" content="noindex,nofollow" />
+<title>保存失敗 {{page title}}</title>
+<link rel="stylesheet" type="text/css" href="{{STATIC}}/style.css" />
+<script type="text/javascript" src="{{STATIC}}/diff3.js"></script>
+<script type="text/javascript" src="{{STATIC}}/conflict.js"></script>
+</head>
+<body>
+<header>
+<h1>保存失敗 <a href="{{page LOCATION}}">{{page title}}</a></h1>
+</header>
+
+<p>このページをあなたが編集している最中に、他の方が同時に編集をし、先に保存をおこないました。他の方による変更をなかったことにしてしまう可能性があるため、あなたの保存を取り消します。</p>
+
+<div id="conflict-mine-source">
+<p>相互の変更内容を手作業で末尾の他の方による変更内容に反映してから、保存をしてください。</p>
+
+<p>あなたが保存しようとした内容:</p>
+
+<div><textarea id="mine-text" name="t" style="width: 100%; height: 5em">{{page source HTMLALL}}</textarea></div>
+</div>
+
+<div id="conflict-orig-source">
+<p>編集開始時の元の内容:</p>
+
+<div><textarea id="orig-text" name="t" style="width: 100%; height: 5em">{{orig source HTMLALL}}</textarea></div>
+</div>
+
+<div id="your">
+<p id="conflict-your-source">他の方が変更し保存済みの内容:</p>
+<p id="conflict-merge">マージ結果で良ければ、再度保存してください。</p>
+<p id="conflict-fail">マージ中に衝突が生じました。衝突を手作業で解消し、保存してください。衝突マーカーの削除を推奨します。</p>
+
+<form method="POST" action="{{SCRIPT}}/" enctype="multipart/form-data">
+<p><input type="hidden" name="c" value="w" />
+<input type="hidden" name="q" value="{{your title HTMLALL}}" />
+<input type="hidden" name="r" value="{{your rev HTMLALL}}" />
+{{IF.1 user}}
+<input type="hidden" name="e" value="{{user token HTMLALL}}" />
+{{ENDIF.1}}
+<textarea id="your-text" name="t" style="width: 100%; height: 20em">{{your source HTMLALL}}</textarea><br />
+<input type="submit" value=" Save " /></p>
+</form>
+</div>
+
+<div id="conflict-marker">
+<p>衝突マーカーの意味:</p>
+<pre style="padding-right: 32px"><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+あなたが保存した内容
+|||||||
+元の内容
+=======
+他の方が既に保存している内容
+&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code></pre>
+</div>
+
+<nav class="c">
+<table><tr>
+<td><form method="GET" action="{{DEFAULT LOCATION}}">
+<input type="submit" value=" トップ " />
+</form></td>
+{{IF.1 your HISTORY? }}
+<td><form method="GET" action="{{your HISTORY}}">
+<input type="submit" value=" 編集履歴 " />
+</form></td>
+{{ENDIF.1}}
+<td><form method="GET" action="{{ALL LOCATION}}">
+<input type="submit" value=" 一覧 " />
+</form></td>
+<td><form method="GET" action="{{RECENT LOCATION}}">
+<input type="submit" value=" 最近の更新 " />
+</form></td>
+{{IF.1 user}}
+<td>{{user name}} <a href="{{SIGNOUT}}">サインアウト</a></td>
+{{ENDIF.1}}
+</tr></table>
+</nav>
+</body>
+</html>
+

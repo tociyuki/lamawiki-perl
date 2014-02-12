@@ -1,0 +1,659 @@
+# 08.page-find.t fixtures
+---
+- !titles
+  id: 1
+  title: Top
+  rev: 1
+  summary: now testing
+  content: |
+
+    <h2>now testing</h2>
+
+    <ul>
+    <li><a href="0" title="TestPage">TestPage</a></li>
+    </ul>
+
+- !relates
+  id: 1
+  to_id: 5
+  n: 1
+
+- !sources
+  rev: 1
+  id: 1
+  posted: !!timestump 2014-01-02T03:01:00
+  remote: carol
+  source: |
+    # now testing
+
+     * [[TestPage]]
+
+- !titles
+  id: 2
+  title: InterWikiName
+  rev: 2
+  summary: interwiki test definitions
+  content: |
+
+    <h2>interwiki test definitions</h2>
+
+    <dl>
+    <dt>plain     -- append last.</dt>
+    <dd>http://www.example.net/wiki?</dd>
+    <dt>default   -- UTF-8 in defaults.</dt>
+    <dd>http://www.example.net/wiki?title=$1&amp;command=browse</dd>
+    <dt>bareamp</dt>
+    <dd>http://www.example.net/wiki?title=$1&amp;command=browse</dd>
+    <dt>utf8</dt>
+    <dd>http://www.example.net/wiki?$(1:utf8)</dd>
+    <dt>euc</dt>
+    <dd>http://www.example.net/wiki?$(1:euc)</dd>
+    <dt>jis</dt>
+    <dd>http://www.example.net/wiki?$(1:jis)</dd>
+    <dt>sjis</dt>
+    <dd>http://www.example.net/wiki?$(1:sjis)</dd>
+    </dl>
+
+- !sources
+  rev: 2
+  id: 2
+  posted: !!timestump 2014-01-02T03:02:00
+  remote: carol
+  source: |
+    # interwiki test definitions
+
+    ? plain     -- append last.
+    : http://www.example.net/wiki?
+
+    ? default   -- UTF-8 in defaults.
+
+    : http://www.example.net/wiki?title=$1&amp;command=browse
+
+    ? bareamp
+    : http://www.example.net/wiki?title=$1&command=browse
+
+    ? utf8
+    : http://www.example.net/wiki?$(1:utf8)
+    ? euc
+    : http://www.example.net/wiki?$(1:euc)
+    ? jis
+    : http://www.example.net/wiki?$(1:jis)
+    ? sjis
+    : http://www.example.net/wiki?$(1:sjis)
+
+- !titles
+  id: 3
+  title: All
+  rev: 0
+  summary:
+  content:
+
+- !titles
+  id: 4
+  title: Recent
+  rev: 0
+  summary:
+  content:
+
+- !titles
+  id: 5
+  title: TestPage
+  rev: 3
+  summary: test top.
+  content: |
+
+    <p>test top.</p>
+
+    <p><a href="0" title="Foo">Foo</a>
+    <a href="1" title="Bar">Bar</a></p>
+
+- !relates
+  id: 5
+  to_id: 6
+  n: 1
+
+- !relates
+  id: 5
+  to_id: 7
+  n: 2
+
+- !sources
+  rev: 3
+  id: 5
+  posted: !!timestump 2014-01-02T03:03:00
+  remote: alice
+  source: |
+    test top.
+
+    [[Foo]]
+    [[Bar]]
+
+- !titles
+  id: 6
+  title: Foo
+  rev: 22
+  summary: foo line 1
+  content: |
+
+    <p>foo line 1
+    foo line 2.3
+    foo line 2.1</p>
+
+    <p>foo line 3.1
+    foo line 3
+    foo line 5</p>
+
+- !sources
+  rev: 4
+  id: 6
+  posted: !!timestump 2014-01-02T03:04:00
+  remote: alice
+  source: |
+    foo line 1
+    foo line 2
+
+- !titles
+  id: 7
+  title: Bar
+  rev: 33
+  summary: bar line 1.2
+  content: |
+
+    <p>bar line 1.2
+    bar line 1.3</p>
+
+    <p>bar line 3.2
+    bar line 4.1</p>
+
+- !sources
+  rev: 5
+  id: 7
+  posted: !!timestump 2014-01-02T03:05:00
+  remote: alice
+  source: |
+    bar line 1
+    bar line 2
+
+- !sources
+  rev: 6
+  id: 6
+  posted: !!timestump 2014-01-02T03:06:00
+  remote: alice
+  source: |
+    foo line 1
+    foo line 2
+    foo line 3
+    foo line 4
+
+- !sources
+  rev: 7
+  id: 6
+  posted: !!timestump 2014-01-02T03:07:00
+  remote: alice
+  source: |
+    foo line 1
+    foo line 2
+    foo line 2.1
+
+    foo line 3
+    foo line 4
+
+- !titles
+  id: 8
+  title: Baz
+  rev: 8
+  summary: baz line 1
+  content: |
+
+    <p>baz line 1</p>
+
+- !sources
+  rev: 8
+  id: 8
+  posted: !!timestump 2014-01-02T03:08:00
+  remote: alice
+  source: |
+    baz line 1
+
+- !titles
+  id: 9
+  title: Fiz
+  rev: 18
+  summary: fiz line 1
+  content: |
+
+    <p>fiz line 1</p>
+
+    <p>fiz line 2.1</p>
+    fiz line 2
+
+    <p>fiz line 3</p>
+
+- !sources
+  rev: 9
+  id: 9
+  posted: !!timestump 2014-01-02T03:09:00
+  remote: alice
+  source: |
+    fiz line 1
+
+    fiz line 2
+
+    fiz line 3
+
+- !sources
+  rev: 10
+  id: 7
+  posted: !!timestump 2014-01-02T03:10:00
+  remote: alice
+  source: |
+    bar line 1.1
+
+    bar line 2
+    bar line 3
+
+- !titles
+  id: 10
+  title: Buz
+  rev: 11
+  summary: buz line 1
+  content: |
+
+    <p>buz line 1
+    buz line 2</p>
+
+    <p>buz line 3
+    buz line 4
+    buz line 5</p>
+
+- !sources
+  rev: 11
+  id: 10
+  posted: !!timestump 2014-01-02T03:11:00
+  remote: alice
+  source: |
+    buz line 1
+    buz line 2
+
+    buz line 3
+    buz line 4
+    buz line 5
+
+- !titles
+  id: 11
+  title: Biz
+  rev: 12
+  summary: biz line 1
+  content: |
+
+    <p>biz line 1
+    biz line 2</p>
+
+- !sources
+  rev: 12
+  id: 11
+  posted: !!timestump 2014-01-02T03:12:00
+  remote: alice
+  source: |
+    biz line 1
+    biz line 2
+
+- !titles
+  id: 12
+  title: Cow
+  rev: 28
+  summary: cow line 1
+  content: |
+
+    <p>cow line 1
+    cow line 2.1</p>
+
+    <p>cow line 3</p>
+
+- !sources
+  rev: 13
+  id: 12
+  posted: !!timestump 2014-01-02T03:13:00
+  remote: alice
+  source: |
+    cow line 1
+    cow line 2
+
+    cow line 3
+
+- !sources
+  rev: 14
+  id: 6
+  posted: !!timestump 2014-01-02T03:14:00
+  remote: alice
+  source: |
+    foo line 1
+    foo line 2.2
+    foo line 2.1
+
+    foo line 3.1
+    foo line 3
+    foo line 4
+    foo line 5
+
+- !titles
+  id: 13
+  title: Dee
+  rev: 15
+  summary: dee line 1
+  content: |
+
+    <p>dee line 1
+    dee line 2</p>
+
+- !sources
+  rev: 15
+  id: 13
+  posted: !!timestump 2014-01-02T03:15:00
+  remote: alice
+  source: |
+    dee line 1
+    dee line 2
+
+- !titles
+  id: 14
+  title: Eat
+  rev: 16
+  summary: eat line 1
+  content: |
+
+    <p>eat line 1</p>
+
+- !sources
+  rev: 16
+  id: 14
+  posted: !!timestump 2014-01-02T03:16:00
+  remote: alice
+  source: |
+    eat line 1
+
+- !sources
+  rev: 17
+  id: 7
+  posted: !!timestump 2014-01-02T03:17:00
+  remote: alice
+  source: |
+    bar line 1.1
+
+    bar line 2
+    bar line 3.1
+    bar line 4
+
+- !sources
+  rev: 18
+  id: 9
+  posted: !!timestump 2014-01-02T03:18:00
+  remote: alice
+  source: |
+    fiz line 1
+
+    fiz line 2.1
+    fiz line 2
+
+    fiz line 3
+
+- !titles
+  id: 15
+  title: Goo
+  rev: 27
+  summary: goo line 1
+  content: |
+
+    <p>goo line 1</p>
+
+    <p>goo line 2
+    goo line 3</p>
+
+- !sources
+  rev: 19
+  id: 15
+  posted: !!timestump 2014-01-02T03:19:00
+  remote: alice
+  source: |
+    goo line 1
+
+    goo line 2
+
+- !titles
+  id: 16
+  title: Hoge
+  rev: 20
+  summary: hoge line 1
+  content: |
+
+    <p>hoge line 1
+    hoge line 2</p>
+
+    <p>hoge line 3</p>
+
+    <p>hoge line 4
+    hoge line 5</p>
+
+- !sources
+  rev: 20
+  id: 16
+  posted: !!timestump 2014-01-02T03:20:00
+  remote: alice
+  source: |
+    hoge line 1
+    hoge line 2
+
+    hoge line 3
+
+    hoge line 4
+    hoge line 5
+
+- !titles
+  id: 17
+  title: Imm
+  rev: 21
+  summary: imm line 1
+  content: |
+
+    <p>imm line 1
+    imm line 2</p>
+
+- !sources
+  rev: 21
+  id: 17
+  posted: !!timestump 2014-01-02T03:21:00
+  remote: alice
+  source: |
+    imm line 1
+    imm line 2
+
+- !sources
+  rev: 22
+  id: 6
+  posted: !!timestump 2014-01-02T03:22:00
+  remote: alice
+  source: |
+    foo line 1
+    foo line 2.3
+    foo line 2.1
+
+    foo line 3.1
+    foo line 3
+    foo line 5
+
+- !titles
+  id: 18
+  title: Jiz
+  rev: 23
+  summary: jiz line 1
+  content: |
+
+    <p>jiz line 1
+    jiz line 2</p>
+
+- !sources
+  rev: 23
+  id: 18
+  posted: !!timestump 2014-01-02T03:23:00
+  remote: alice
+  source: |
+    jiz line 1
+    jiz line 2
+
+- !titles
+  id: 19
+  title: Krr
+  rev: 24
+  summary: krr line 1
+  content: |
+
+    <p>krr line 1
+    krr line 2</p>
+
+    <p>krr line 3</p>
+
+- !sources
+  rev: 24
+  id: 19
+  posted: !!timestump 2014-01-02T03:24:00
+  remote: alice
+  source: |
+    krr line 1
+    krr line 2
+
+    krr line 3
+
+- !titles
+  id: 20
+  title: Laz
+  rev: 30
+  summary: laz line 1
+  content: |
+
+    <p>laz line 1
+    laz line 1.1
+    laz line 2</p>
+
+- !sources
+  rev: 25
+  id: 20
+  posted: !!timestump 2014-01-02T03:25:00
+  remote: alice
+  source: |
+    laz line 1
+    laz line 2
+
+- !sources
+  rev: 26
+  id: 7
+  posted: !!timestump 2014-01-02T03:26:00
+  remote: alice
+  source: |
+    bar line 1.1
+
+    bar line 3.2
+    bar line 4
+
+- !sources
+  rev: 27
+  id: 15
+  posted: !!timestump 2014-01-02T03:27:00
+  remote: alice
+  source: |
+    goo line 1
+
+    goo line 2
+    goo line 3
+
+- !sources
+  rev: 28
+  id: 12
+  posted: !!timestump 2014-01-02T03:28:00
+  remote: alice
+  source: |
+    cow line 1
+    cow line 2.1
+
+    cow line 3
+
+- !titles
+  id: 21
+  title: Muu
+  rev: 29
+  summary: muu line 1
+  content: |
+
+    <p>muu line 1</p>
+
+    <p>muu line 2</p>
+
+- !sources
+  rev: 29
+  id: 21
+  posted: !!timestump 2014-01-02T03:29:00
+  remote: alice
+  source: |
+    muu line 1
+
+    muu line 2
+
+- !sources
+  rev: 30
+  id: 20
+  posted: !!timestump 2014-01-02T03:30:00
+  remote: alice
+  source: |
+    laz line 1
+    laz line 1.1
+    laz line 2
+
+- !titles
+  id: 22
+  title: Ngg
+  rev: 31
+  summary: ngg line 1
+  content: |
+
+    <p>ngg line 1</p>
+
+- !sources
+  rev: 31
+  id: 22
+  posted: !!timestump 2014-01-02T03:31:00
+  remote: alice
+  source: |
+    ngg line 1
+
+- !titles
+  id: 23
+  title: Orr
+  rev: 32
+  summary: orr line 1
+  content: |
+
+    <p>orr line 1</p>
+
+    <p>orr line 2</p>
+
+- !sources
+  rev: 32
+  id: 23
+  posted: !!timestump 2014-01-02T03:32:00
+  remote: alice
+  source: |
+    orr line 1
+
+    orr line 2
+
+- !sources
+  rev: 33
+  id: 7
+  posted: !!timestump 2014-01-02T03:33:00
+  remote: alice
+  source: |
+    bar line 1.2
+    bar line 1.3
+
+    bar line 3.2
+    bar line 4.1
+
