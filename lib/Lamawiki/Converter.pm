@@ -139,10 +139,10 @@ sub convert {
         if (defined $sharps) {
             my $n = 1 + length $sharps;
             my $m = ++$section{$t2};
-            my $id = _anchor_escape($t2 . ($m == 1 ? q() : "_$m"));
+            my $escid = _anchor_escape($t2 . ($m == 1 ? q() : "_$m"));
             $toc .= $c->_nestag($tnest, q( ) x $n, 'ul', 'li')
-                . qq(<a href="#$id">$t2</a>);
-            $t1 = qq(\n<h$n id="$id">$t1</h$n>\n);
+                . qq(<a href="#$escid">$t2</a>);
+            $t1 = qq(\n<h$n id="$escid">$t1</h$n>\n);
         }
         $t .= $t1;
     }
@@ -163,9 +163,9 @@ sub convert {
         $t .= qq(\n<ol class="footnote">\n);
         for (sort { $a->[0] <=> $b->[0] } values %{$c->footnote}) {
             my($fn, $id, $line) = @{$_};
-            $id = _uriall_escape($id);
+            my $escid = _uriall_escape($id);
             my $y = $c->_inline($page, $line);
-            $t .= qq(<li id="$id">$y</li>\n);
+            $t .= qq(<li id="$escid">$y</li>\n);
         }
         $t .= qq(</ol>\n);
     }
@@ -180,17 +180,17 @@ sub _figure {
         | \(\s*(https?://[0-9A-Za-z\-.]+[/?]$URIC+)\s*\))\z
     }msxo) {
         if (defined $3) {
-            my($x, $u) = (_html_escape($1), _uri_escape($3));
-            my $t = qq(\n<figure>\n<img src="$u" alt="" /><br />\n);
-            if ($x ne q()) {
-                $t .= qq(<figcaption>$x</figcaption>\n);
+            my($escx, $escu) = (_html_escape($1), _uri_escape($3));
+            my $t = qq(\n<figure>\n<img src="$escu" alt="" /><br />\n);
+            if ($escx ne q()) {
+                $t .= qq(<figcaption>$escx</figcaption>\n);
             }
             $t .= qq(</figure>\n);
             return $t;
         }
         elsif ($page->is_title($2)) {
-            my($x, $k) = (_html_escape($1), _htmlall_escape($2));
-            return qq(\n<div wiki="$k">$x</div>\n);
+            my($escx, $esck) = (_html_escape($1), _htmlall_escape($2));
+            return qq(\n<div wiki="$esck">$escx</div>\n);
         }
     }
     return "\n<p>" . _htmlall_escape($s) . "</p>\n";
