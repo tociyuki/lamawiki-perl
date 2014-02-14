@@ -15,7 +15,7 @@ my %TAG = (
 );
 my %ESC = (
     qw[& &amp; < &lt; > &gt; " &quot;],
-    q(') => '&#39;', q(*) => '&#42;', q({) => '&#123;', q(}) => '&#125;',
+    q(') => '&#39;', q(*) => '&#42;',
 );
 my $AMP = qr/&(?:\#(?:[1-9][0-9]{1,9};|x[0-9A-Fa-f]{1,8};)|[A-Za-z][0-9A-Za-z]{0,15};)?/msx;
 
@@ -227,9 +227,9 @@ sub _inline {
                     push @{$page->rel}, $page->new({'title' => $q});
                     $self->rel->{$q} = $#{$page->rel};
                 }
-                my $i = $self->rel->{$q};
+                my $esci = _uri_escape($self->rel->{$q});
                 my $escq = _htmlall_escape($q);
-                $t .= qq(<a href="$i$escf" title="$escq">$escx</a>);
+                $t .= qq(<a href="$esci$escf" title="$escq">$escx</a>);
                 next;
             }
         }
@@ -237,19 +237,18 @@ sub _inline {
             my $u = $13 || $12
                 || $self->reflink->{defined $11 && $11 ne q() ? lc $11 : lc $9};
             if ($u) {
-                $u = _uri_escape($u);
-                my $x = _htmlstar_escape($13 || $9);
-                $t .= qq(<a href="$u">$x</a>);
+                my $escu = _uri_escape($u);
+                my $escx = _htmlstar_escape($13 || $9);
+                $t .= qq(<a href="$escu">$escx</a>);
                 next;
             }
         }
         elsif (defined $7) {
             my $k = lc $7;
             if (exists $self->footnote->{$k}) {
-                my($fn, $id) = @{$self->footnote->{$k}};
-                $id = _uriall_escape($id);
-                $fn = _htmlstar_escape($fn);
-                $t .= qq(<a href="#$id" rel="footnote">$fn</a>);
+                my $escid = _uriall_escape($self->footnote->{$k}[1]);
+                my $escfn = _htmlstar_escape($self->footnote->{$k}[0]);
+                $t .= qq(<a href="#$escid" rel="footnote">$escfn</a>);
                 next;
             }
         }
@@ -257,9 +256,8 @@ sub _inline {
             $t .= "<br />\n";
             next;
         }
-        my($ticks, $x) = ($4 || q(), defined $5 ? $5 : $2);
-        $x = _htmlall_escape($x);
-        $t .= (length $ticks) > 2 ? "<code>$x</code>" : $x;
+        my($ticks, $escx) = ($4 || q(), _htmlall_escape(defined $5 ? $5 : $2));
+        $t .= (length $ticks) > 2 ? "<code>$escx</code>" : $escx;
     }
     $t =~ s{(?<![*])[*]((?:[*][*])?)([^\s*][^*]*?)(?<=[^\s*])[*]((?:[*][*])?)(?![*])}
            {$1<em>$2</em>$3}gmsx;
