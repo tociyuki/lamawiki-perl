@@ -34,10 +34,12 @@ sub is_rev { return defined $_[1] && $_[1] =~ m/\A(?:0|[1-9][0-9]{0,8})\z/msx }
 sub is_title {
     my($self, $q) = @_;
     return if ! defined $q;
-    return $q =~ m{\A
-        (?!(?i:ftps?:|https?:|javascript:))
-        [^\P{Graph}\#?\@\\|\[\]{}<>]+(?:[ ]+[^\P{Graph}\#?\@\\|\[\]{}<>]+)*
-    \z}msx && (length encode_utf8($q)) < 256;
+    return if $q =~ m/https?:|f(?:tps?|ile):|script:|data:|mailto:/msxi;
+    return if $q !~ m{\A
+        [^\P{Graph}!"\#\$%&'+,\-./:;<=>?\@\[\\\]^`{|}~]
+        [^\P{Graph}\#<>?\@\[\\\]{|}]*(?:[ ]{1,4}[^\P{Graph}\#<>?\@\[\\\]{|}]+)*
+    \z}msx;
+    return (length encode_utf8($q)) < 256;
 }
 
 sub see_title {

@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use Test::More tests => 483;
+use Test::More tests => 544;
 use Lamawiki::Strftime qw(strftime);
 use Lamawiki;
 
@@ -221,21 +221,77 @@ can_ok 'Lamawiki::Page', qw(
     ok ! $it->is_title('x' x 512),
         'long string should not be a title.';
 
-    for my $q (
-        'FrontPage', 'All', 'RecentChanges',
-        'front page', 'all', 'recent changes',
-        'http', '0123',
-        'a/b', 'a:b', 'a b', 'a:b/c', 'a b:c/d',
-        q(Mr. foo and Mrs. bar), q(A's something),
-        q(!"$%&'()*+,-./:;=^_`~),
-        q(!"$%&'()*+,-./:;=^_`~ !"$%&'()*+,-./:;=^_`~),,
-    ) {
+    for my $q ('FrontPage', 'Frontpage', 'frontPage', 'fronpage',
+                'front page', 'front_page',
+                'front:page', q{a!"$%&'()*+,-./:;=^_`~},
+                '20140214-snow day', 'foo_(bar)',
+                '_page', '*page', '(page', ')page',
+     ) {
         ok $it->is_title($q),
-            qq('$q' should be a title.);
+            "q{$q} should be title.";
     }
-    for my $q (split //, q( #?@\\|[]{}<>)) {
-        ok ! $it->is_title("a$q"),
-            qq('a$q' should not include other ASCII7 space or punctuations.);        
+
+    ok $it->is_title("\x{8868}\x{7d19}"),
+        '"\\x{8868}\\x{7d19}" should be title.';
+
+    ok ! $it->is_title(undef),
+        "!!undef should not be title.";
+
+    ok ! $it->is_title("\x{00}page"),
+        '"\\x{00}page" should not be title.';
+
+    ok ! $it->is_title("pa\x{00}ge"),
+        '"pa\\x{00}ge" should not be title.';
+
+    ok ! $it->is_title("page\x{00}"),
+        '"page\\x{00}" should not be title.';
+
+    ok ! $it->is_title("\tpage"),
+        '"\\tpage" should not be title.';
+
+    ok ! $it->is_title("pa\tge"),
+        '"pa\\tge" should not be title.';
+
+    ok ! $it->is_title("page\t"),
+        '"page\\t" should not be title.';
+
+    ok ! $it->is_title("\rpage"),
+        '"\\rpage" should not be title.';
+
+    ok ! $it->is_title("pa\rge"),
+        '"pa\\rge" should not be title.';
+
+    ok ! $it->is_title("page\r"),
+        '"page\\r" should not be title.';
+
+    ok ! $it->is_title("\npage"),
+        '"\\npage" should not be title.';
+
+    ok ! $it->is_title("pa\nge"),
+        '"pa\\nge" should not be title.';
+
+    ok ! $it->is_title("page\n"),
+        '"page\\n" should not be title.';
+
+    for my $q (' page', 'page ', 'pa                              ge',
+
+                'http://foo', 'https://foo', 'ftp://foo', 'ftps://foo',
+                'file://foo', 'data:foo', 'mailto:foo',
+                'javascript:bad', 'vbscript:bad', 'script:bad',
+                'foo http://foo', 'foo https://foo', 'foo ftp://foo', 'foo ftps://foo',
+                'foo javascript:bad', 'foo vbscript:bad', 'foo script:bad',
+                'foo file://foo', 'foo data:foo', 'foo mailto:foo',
+
+                '!page', '"page', '#page', '$page', '%page', '&page', '\'page',
+                '+page', ',page', '-page', '.page', '/page', ':page', ';page',
+                '<page', '=page', '>page', '?page', '@page', '[page', '\\page',
+                ']page', '^page', '`page', '{page', '|page', '}page', '~page',
+
+                'pa#ge', 'pa<ge', 'pa>ge', 'pa?ge', 'pa@ge', 'pa[ge', 'pa\\ge',
+                'pa]ge', 'pa{ge', 'pa|ge', 'pa}ge',
+    ) {
+        ok ! $it->is_title($q),
+            "q{$q} should not be title.";
     }
 }
 
