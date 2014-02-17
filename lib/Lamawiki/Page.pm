@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Encode;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub MAXREV   { return 999999999 }
 sub new      { return bless {%{$_[1] || +{}}}, ref $_[0] || $_[0] }
@@ -288,7 +288,7 @@ Lamawiki::Page - the page object.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

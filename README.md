@@ -1,4 +1,4 @@
-## Lamawiki version 0.01
+## Lamawiki version 0.02
 
 Lamawiki は Perl5 で記述した Wiki エンジンです。
 CGI スクリプト兼 PSGI アプリケーションとして働きます。

@@ -4,7 +4,7 @@ use warnings;
 use Carp;
 use Encode;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new  { return bless +{%{$_[1] || +{}}}, ref $_[0] || $_[0] }
 sub wiki { return @_ > 1 ? ($_[0]{'wiki'} = $_[1]) : $_[0]{'wiki'} }
@@ -133,7 +133,7 @@ Lamawiki::Layout - Lamawiki::Liq filter to layout content from resolved page.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

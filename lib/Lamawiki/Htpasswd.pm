@@ -6,6 +6,8 @@ use Carp;
 use Encode;
 use Digest::MD5 qw(md5);
 
+our $VERSION = '0.02';
+
 sub new { return bless {%{$_[1]}}, ref $_[0] || $_[0] }
 sub path { return shift->{'path'} }
 
@@ -165,7 +167,7 @@ Lamawiki::Htpasswd - check user password with htpasswd file
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

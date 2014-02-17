@@ -1,5 +1,13 @@
 Revision history for Lamawiki
 
+0.02    Mon Feb 17 14:49:55 2014 UTC
+
+    - Converter scans InterWikiName definition list.
+    - find *_rev returns {page,orig,prev}.
+    - save conflict returns {page,orig,mine}.
+    - Capability allow method gets title from orig.
+    - All and Recent rev change to -1.
+
 0.01    Wed Feb 12 06:08:26 2014 UTC
 
     - wiki.cgi PSGI application or CGI script.

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Encode;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub config          { return $_[0]{'config'} }
 sub default_title   { return shift->config->{'default.title'} }
@@ -66,7 +66,7 @@ sub find_authenticate {
 sub reload_interwiki {
     my($self) = @_;
     my $q = $self->config->{'interwiki.title'};
-    return $self->new($self) if ! $q || ! $self->interwiki;
+    return $self->new($self) if ! $q || ! $self->interwiki || ! $self->converter;
     my $page = $self->page->find_interwiki($self, $q);
     my $h = $self->converter->scan_interwiki_servers($page);
     my $interwiki = $self->interwiki->reload($h);
@@ -85,7 +85,7 @@ Lamawiki - the lamawiki mediator
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

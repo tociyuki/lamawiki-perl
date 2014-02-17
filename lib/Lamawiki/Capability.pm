@@ -2,7 +2,7 @@ package Lamawiki::Capability;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new { return bless +{%{$_[1] || +{}}}, ref $_[0] || $_[0] }
 
@@ -99,7 +99,7 @@ Lamawiki::Capability - authorization for wiki data.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

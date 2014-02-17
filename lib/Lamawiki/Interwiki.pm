@@ -4,7 +4,7 @@ use warnings;
 use Carp;
 use Encode;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new  { return bless {%{$_[1] || +{}}}, ref $_[0] || $_[0] }
 sub server { return $_[0]{'server'} }
@@ -53,7 +53,7 @@ Lamawiki::Interwiki - the interwiki resolver.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

@@ -6,7 +6,7 @@ use Encode;
 use Lamawiki::Strftime qw(strftime);
 use DBI qw(:sql_types);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub new { return bless {%{$_[1] || +{}}}, ref $_[0] || $_[0] }
 sub dbh { return @_ > 1 ? ($_[0]{'dbh'} = $_[1]) : $_[0]{'dbh'} }
@@ -150,7 +150,7 @@ Lamawiki::Database - DBI helper.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

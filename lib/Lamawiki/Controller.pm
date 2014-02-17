@@ -4,7 +4,7 @@ use warnings;
 use Encode;
 use Digest::MD5 qw(md5_base64);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my @LOCATIONS_REQUEST = (
     [qr{/signin}msx => 'call_signin'],
@@ -323,7 +323,7 @@ Lamawiki::Controller - the web controller
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

@@ -5,7 +5,7 @@ use Carp;
 use Time::Local qw(timelocal timegm);
 use base qw(Exporter);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our @EXPORT_OK = qw(strftime);
 
@@ -69,7 +69,7 @@ Lamawiki::Strftime - format date and time
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

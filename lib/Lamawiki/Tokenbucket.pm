@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Carp;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 # after accepting burst tokens, limits 1 token / period seconds.
 sub burst  { return $_[0]{'burst'} }
@@ -71,7 +71,7 @@ Lamawiki::Tokenbucket - the token bucket filter.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 SEE ALSO
 

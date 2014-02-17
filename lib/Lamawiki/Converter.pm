@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Encode;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $URIC = qr{[\w\#\$&'()*+,\-./:;=?\@~]|%[0-9A-Fa-f]{2}}msx;
 my $HTURI = qr{(?:ht|f)tps?://[0-9A-Za-z\-.]+(?:[/?\#]$URIC*)?}msx;
@@ -327,7 +327,7 @@ Lamawiki::Converter - convert text from the source field to the content field.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

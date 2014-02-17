@@ -6,7 +6,7 @@ use Encode;
 use File::Spec;
 use Lamawiki::Strftime qw(strftime);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub filter  { return @_ > 1 ? ($_[0]{'filter'} = $_[1]) : $_[0]{'filter'} }
 sub dir     { return @_ > 1 ? ($_[0]{'dir'}    = $_[1]) : $_[0]{'dir'} }
@@ -165,7 +165,7 @@ Lamawiki::Liq - the tiny template engine.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

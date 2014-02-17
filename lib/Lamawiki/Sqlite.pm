@@ -4,7 +4,7 @@ use warnings;
 use DBI qw(:sql_types);
 use base qw(Lamawiki::Database);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub connect {
     my($class, $dsrc, $user, $auth, $yield) = @_;
@@ -332,7 +332,7 @@ Lamawiki::Sqlite - the sqlite3 database accessing module.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

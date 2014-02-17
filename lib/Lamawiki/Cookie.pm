@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use Encode;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 my $random_bytes;
 BEGIN{
@@ -101,7 +101,7 @@ Lamawiki::Cookie - the cookie session for signin user.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 
