@@ -8,7 +8,7 @@
 </head>
 <body>
 <header>
-<h1>保存不許可 <a href="{{page LOCATION}}">{{page title}}</a></h1>
+<h1>保存不許可 <a href="{{orig LOCATION}}">{{orig title}}</a></h1>
 </header>
 
 <p><textarea name="t" style="width: 100%; height: 20em">{{page source HTMLALL}}</textarea></p>
@@ -18,8 +18,8 @@
 <td><form method="GET" action="{{DEFAULT LOCATION}}">
 <input type="submit" value=" トップ " />
 </form></td>
-{{IF.1 page HISTORY? }}
-<td><form method="GET" action="{{page HISTORY}}">
+{{IF.1 orig HISTORY? }}
+<td><form method="GET" action="{{orig HISTORY}}">
 <input type="submit" value=" 編集履歴 " />
 </form></td>
 {{ENDIF.1}}

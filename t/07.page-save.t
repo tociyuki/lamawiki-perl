@@ -382,10 +382,10 @@ my $post0 = $wiki0->now - 1000;
         'source' => 'conflict Page1 rev1.',
     });
 
-    ok exists $it->{'page'} && exists $it->{'orig'} && exists $it->{'your'},
+    ok exists $it->{'mine'} && exists $it->{'orig'} && exists $it->{'page'},
         'it should skip to save on conflict.';
 
-    is_deeply $it->{'page'}, $wiki0->page->new({
+    is_deeply $it->{'mine'}, $wiki0->page->new({
         'id' => 5, 'rev' => 1, 'title' => 'Page1', 'posted' => $post0 + 30,
         'remote' => 'alice', 'source' => 'conflict Page1 rev1.',
     }), 'it should return mime of conflict.';
@@ -396,11 +396,11 @@ my $post0 = $wiki0->now - 1000;
         'summary' => 'test page1 b', 'content' => q(),
     }), 'it should return orig of conflict.';
 
-    is_deeply $it->{'your'}, $wiki0->page->new({
+    is_deeply $it->{'page'}, $wiki0->page->new({
         'id' => 5, 'rev' => 2, 'title' => 'Page1', 'posted' => $post0 + 20,
         'remote' => 'alice', 'source' => 'test page1 rev2.',
         'summary' => 'test page1 b', 'content' => q(),
-    }), 'it should return orig of conflict.';
+    }), 'it should return page of conflict.';
 }
 
 {

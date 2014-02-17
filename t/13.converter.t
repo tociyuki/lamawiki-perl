@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use Lamawiki::Liq;
 use Lamawiki::Converter;
 use Test::More;
 use lib qw(./t/lib);
@@ -10,7 +9,7 @@ my $blocks = split_spec(qw(@== @--), do{ local $/ = undef; scalar <DATA> });
 
 plan tests => 1 * @{$blocks};
 
-my $converter = Lamawiki::Converter->new({'view' => Lamawiki::Liq->new});
+my $converter = Lamawiki::Converter->new;
 
 for my $test (@{$blocks}) {
     my $page = Mock::Page->new({'source' => $test->{'input'}});
@@ -20,7 +19,6 @@ for my $test (@{$blocks}) {
 
 {
     package Mock::Page;
-    use Encode;
     sub new { return bless {%{$_[1] || +{}}}, ref $_[0] || $_[0] }
     sub source  { return $_[0]{'source'} }
     sub content { return $_[0]{'content'} }

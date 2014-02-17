@@ -62,71 +62,75 @@ my $wiki = Lamawiki->new({
     });
 
     is_deeply [$wiki->page->find($wiki, 'id_rev', {'id' => 7, 'rev' => 33})],
-              [{'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{33}}, 'content' => ''}),
                 'prev' => $wiki->page->new({%{$sources->{26}}, 'content' => ''}),
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page id_rev 33:7:Bar for /7/33.";
 
     is_deeply [$wiki->page->find($wiki, 'id_rev', {'id' => 7, 'rev' => 20})],
-              [{'page' => $wiki->page->new({%{$sources->{17}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{17}}, 'content' => ''}),
                 'prev' => $wiki->page->new({%{$sources->{10}}, 'content' => ''}),
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page id_rev 17:7:Bar for /7/20.";
 
     is_deeply [$wiki->page->find($wiki, 'id_rev', {'id' => 7, 'rev' => 17})],
-              [{'page' => $wiki->page->new({%{$sources->{17}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{17}}, 'content' => ''}),
                 'prev' => $wiki->page->new({%{$sources->{10}}, 'content' => ''}),
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page id_rev 17:7:Bar for /7/17.";
 
     is_deeply [$wiki->page->find($wiki, 'id_rev', {'id' => 7, 'rev' => 9})],
-              [{'page' => $wiki->page->new({%{$sources->{5}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{5}}, 'content' => ''}),
                 'prev' => $bar0,
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page id_rev 5:7:Bar for /7/9.";
 
     is_deeply [$wiki->page->find($wiki, 'id_rev', {'id' => 7, 'rev' => 5})],
-              [{'page' => $wiki->page->new({%{$sources->{5}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{5}}, 'content' => ''}),
                 'prev' => $bar0,
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page id_rev 5:7:Bar for /7/5.";
 
     is_deeply [$wiki->page->find($wiki, 'id_rev', {'id' => 7, 'rev' => 4})],
-              [{'page' => $bar0, 'prev' => undef, 'latest' => $bar0}],
+              [{'orig' => $bar0,
+                'prev' => $bar0,
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page id_rev 0:7:Bar for /7/4.";
 
     is_deeply [$wiki->page->find($wiki, 'title_rev', {'title' => 'Bar', 'rev' => 33})],
-              [{'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{33}}, 'content' => ''}),
                 'prev' => $wiki->page->new({%{$sources->{26}}, 'content' => ''}),
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page title_rev 33:7:Bar for /?Bar&r=33.";
 
     is_deeply [$wiki->page->find($wiki, 'title_rev', {'title' => 'Bar', 'rev' => 20})],
-              [{'page' => $wiki->page->new({%{$sources->{17}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{17}}, 'content' => ''}),
                 'prev' => $wiki->page->new({%{$sources->{10}}, 'content' => ''}),
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should select page title_rev 17:7:Bar for /?Bar&r=20.";
 
     is_deeply [$wiki->page->find($wiki, 'title_rev', {'title' => 'Bar', 'rev' => 17})],
-              [{'page' => $wiki->page->new({%{$sources->{17}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{17}}, 'content' => ''}),
                 'prev' => $wiki->page->new({%{$sources->{10}}, 'content' => ''}),
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page title_rev 17:7:Bar for /?Bar&r=17.";
 
     is_deeply [$wiki->page->find($wiki, 'title_rev', {'title' => 'Bar', 'rev' => 9})],
-              [{'page' => $wiki->page->new({%{$sources->{5}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{5}}, 'content' => ''}),
                 'prev' => $bar0,
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page title_rev 5:7:Bar for /?Bar&r=9.";
 
     is_deeply [$wiki->page->find($wiki, 'title_rev', {'title' => 'Bar', 'rev' => 5})],
-              [{'page' => $wiki->page->new({%{$sources->{5}}, 'content' => ''}),
+              [{'orig' => $wiki->page->new({%{$sources->{5}}, 'content' => ''}),
                 'prev' => $bar0,
-                'latest' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page title_rev 5:7:Bar for /?Bar&r=5.";
 
     is_deeply [$wiki->page->find($wiki, 'title_rev', {'title' => 'Bar', 'rev' => 4})],
-              [{'page' => $bar0, 'prev' => undef, 'latest' => $bar0}],
+              [{'orig' => $bar0,
+                'prev' => $bar0,
+                'page' => $wiki->page->new({%{$sources->{33}}, 'content' => ''})}],
         "it should find page title_rev 0:7:Bar for /?Bar&r=4.";
 }
 
@@ -193,7 +197,7 @@ my $wiki = Lamawiki->new({
 
     is_deeply [$wiki->page->find($wiki, 'id', {'id' => $all_id})],
               [{'page' => $wiki->page->new({
-                    'rev' => $wiki->page->MAXREV + 1,
+                    'rev' => -1,
                     'title' => $all_title, 'id' => $all_id,
                     'posted' => $wiki->now, 'remote' => undef,
                     'summary' => q(), 'content' => q(), 'source' => q(),
@@ -202,7 +206,7 @@ my $wiki = Lamawiki->new({
 
     is_deeply [$wiki->page->find($wiki, 'title', {'title' => $all_title})],
               [{'page' => $wiki->page->new({
-                    'rev' => $wiki->page->MAXREV + 1,
+                    'rev' => -1,
                     'title' => $all_title, 'id' => $all_id,
                     'posted' => $wiki->now, 'remote' => undef,
                     'summary' => q(), 'content' => q(), 'source' => q(),
@@ -226,7 +230,7 @@ my $wiki = Lamawiki->new({
 
     is_deeply [$wiki->page->find($wiki, 'id', {'id' => $recent_id})],
               [{'page' => $wiki->page->new({
-                    'rev' => $wiki->page->MAXREV + 1,
+                    'rev' => -1,
                     'title' => $recent_title, 'id' => $recent_id,
                     'posted' => $wiki->now, 'remote' => undef,
                     'summary' => q(), 'content' => q(), 'source' => q(),
@@ -235,7 +239,7 @@ my $wiki = Lamawiki->new({
 
     is_deeply [$wiki->page->find($wiki, 'title', {'title' => $recent_title})],
               [{'page' => $wiki->page->new({
-                    'rev' => $wiki->page->MAXREV + 1,
+                    'rev' => -1,
                     'title' => $recent_title, 'id' => $recent_id,
                     'posted' => $wiki->now, 'remote' => undef,
                     'summary' => q(), 'content' => q(), 'source' => q(),
@@ -257,7 +261,7 @@ my $wiki = Lamawiki->new({
 
     is_deeply [$wiki->page->find_remote($wiki, 'alice')],
               [{'page' => $wiki->page->new({
-                    'rev' => $wiki->page->MAXREV + 1,
+                    'rev' => -1,
                     'title' => '', 'id' => undef,
                     'posted' => $wiki->now, 'remote' => 'alice',
                     'rel' => $alice})}],

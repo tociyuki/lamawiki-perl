@@ -63,35 +63,45 @@ sub save {
     return if ! $wiki->user && $wiki->sch && ! $wiki->sch->pass($wiki, $h->{'remote'}, $wiki->now);
     my $begun = $wiki->db->begun_work;
     $begun or $wiki->db->begin_work;
-    my $your = $self->_select($wiki, $h->{'title'}, $self->MAXREV);
-    my $page = $self->new({
-        'id' => $your->id, 'rev' => $h->{'rev'}, 'title' => $h->{'title'},
+    my $param = $self->find($wiki, 'title_rev', {'title' => $h->{'title'}, 'rev' => $h->{'rev'}});
+    my $page = $param->{'page'};
+    my $orig = $param->{'orig'};
+    my $prev = $param->{'prev'};
+    my $mine = $self->new({
+        'id' => $page->id, 'rev' => $h->{'rev'}, 'title' => $h->{'title'},
         'posted' => $h->{'posted'} ? $h->{'posted'} : $wiki->now,
         'remote' => $wiki->user ? $wiki->user->name
                   : $h->{'remote'} ? $h->{'remote'}
                   : q(),
         'source' => $h->{'source'},
     });
-    if ($page->rev != $your->rev) {
-        my $orig = $self->_select($wiki, $page->title, $page->rev);
+    if ($mine->rev != $page->rev) {
         $begun or $wiki->db->rollback;
-        return if $page->rev > $your->rev;
-        return {'page' => $page, 'orig' => $orig, 'your' => $your};
+        return if $mine->rev > $page->rev;
+        return {'mine' => $mine, 'orig' => $orig, 'page' => $page};
     }
-    my $f = $page->rev == 0 && $page->source ne q() ? 'insert'
-          : $page->rev > 0  && $page->source eq q() ? 'delete'
-          : $page->rev > 0  && $page->source ne $your->source ? 'update'
+    my $f = $mine->rev == 0 && $mine->source ne q() ? 'insert'
+          : $mine->rev > 0  && $mine->source eq q() ? 'delete'
+          : $mine->rev > 0  && $mine->source ne $page->source ? 'update'
           : q();
-    if (! $wiki->capability->allow($wiki, $f, $your, $page)) {
+    if (! $wiki->capability->allow($wiki, $f, $page, $mine)) {
         $begun or $wiki->db->rollback;
         return;
     }
+    if ($f eq 'delete') {
+        if ($mine->rev > 0) {
+            $wiki->db->call('sources.delete', $mine);
+        }
+        $mine = $prev;
+        if ($mine->rev > 0) {
+            $wiki->db->call('sources.delete', $mine);
+        }
+    }
     if ($f) {
-        $f = "_${f}";
-        $page = $page->$f($wiki);
+        $mine = $mine->_insert($wiki)->_update_title_rel($wiki);
     }
     $begun or $wiki->db->commit;
-    return {'page' => $page};
+    return {'page' => $mine};
 }
 
 sub find_edit {
@@ -99,13 +109,13 @@ sub find_edit {
     my $r = $h->{'rev'};
     my $param = $wiki->page->find($wiki, 'title_rev', $h) or return;
     delete $param->{'prev'};
-    if (defined $r && $param->{'page'}->rev != $r) {
-        delete $param->{'latest'};
+    if (defined $r && $param->{'orig'}->rev != $r) {
+        delete $param->{'page'};
     }
     else {
         my $f = $param->{'page'}->rev == 0 ? 'insert' : 'update';
         if (! $wiki->capability->allow($wiki, $f, undef, $param->{'page'})) {
-            delete $param->{'latest'};
+            delete $param->{'page'};
         }
     }
     return $param;
@@ -122,7 +132,7 @@ sub find_remote {
     my($self, $wiki, $s) = @_;
     my $a = $self->findall($wiki, 'remote', {'remote' => $s});
     return +{'page' => $self->new({
-        'id' => undef, 'title' => q(), 'rev' => $self->MAXREV + 1,
+        'id' => undef, 'title' => q(), 'rev' => -1,
         'remote' => $s, 'rel' => $a, 'posted' => $wiki->now,
     })};
 }
@@ -131,7 +141,7 @@ sub generate_all {
     my($self, $wiki) = @_;
     my $rel = $self->findall($wiki, 'all', {});
     return $self->new({
-        %{$self}, 'rev' => $self->MAXREV + 1, 'posted' => $wiki->now,
+        %{$self}, 'rev' => -1, 'posted' => $wiki->now,
         'rel' => $rel, 'resolver' => 'all',
     });
 }
@@ -141,7 +151,7 @@ sub generate_recent {
     my $rel = $self->findall($wiki, 'recent', {});
     @{$rel} = map { $_->new({%{$_}, 'source' => q(), 'content' => q()}) } @{$rel};
     return $self->new({
-        %{$self}, 'rev' => $self->MAXREV + 1, 'posted' => $wiki->now,
+        %{$self}, 'rev' => -1, 'posted' => $wiki->now,
         'rel' => $rel, 'resolver' => 'recent',
     });
 }
@@ -179,13 +189,15 @@ sub find {
     }
     my($id, $q, $r) = @{$h}{qw(id title rev)};
     return if defined $id && ! $self->is_id($id);
-    return if defined $r && ! ($self->is_rev($r) && $r > 0);
+    return if defined $r && ! $self->is_rev($r);
     if (defined $q) {
         return if ! $self->is_title($q);
         return if $wiki->interwiki && $wiki->interwiki->resolve($q);
-        return if defined $r && $wiki->generater->{$q};
+        if ($wiki->generater->{$q}) {
+            return if $k eq 'id_rev' || $k eq 'title_rev';
+        }
     }
-    my($page, $prev, $latest);
+    my($page, $prev, $orig);
     my $select_from_pages = $k eq 'id' || $k eq 'title' ? sub{
         my $g = $wiki->db->call("pages.select_$k", $h)->[0];
         $page = $g ? $self->new($g) : $self->empty($q, $id);
@@ -196,15 +208,16 @@ sub find {
         return;
     }
     : $k eq 'id_rev' || $k eq 'title_rev' ? sub{
-        my $g = $wiki->db->call("pages.select_$k", $h)->[0];
-        $page = $latest = $g ? $self->new($g) : $self->empty($q, $id);
-        return if $page->rev <= 0;
-        my $g0 = $wiki->db->call("pages.select_$k",
-            {%{$h}, 'rev' => $page->rev - 1})->[0];
-        $prev = $g0 && $self->new($g0);
-        my $g1 = $wiki->db->call("pages.select_$k",
-            {%{$h}, 'rev' => $wiki->page->MAXREV + 1})->[0];
-        $latest = $g1 ? $self->new($g1) : $self->empty($page->title, $page->id);
+        my $stx = $wiki->db->prepare("pages.select_$k");
+        $stx->execute($h);
+        my $g0 = $stx->fetchrow;
+        $orig = $g0 ? $self->new($g0) : $self->empty($q, $id);
+        $stx->execute({%{$h}, 'rev' => $orig->rev - 1});
+        my $g1 = $stx->fetchrow;
+        $prev = $g1 ? $self->new($g1) : $self->empty($q, $id);
+        $stx->execute({%{$h}, 'rev' => $self->MAXREV});
+        my $g2 = $stx->fetchrow;
+        $page = $g2 ? $self->new($g2) : $self->empty($q, $id);
         return;
     }
     : return;
@@ -221,7 +234,7 @@ sub find {
         return +{'page' => $gen ? $gen->($wiki, $page) : $page};
     }
     return if $gen;
-    return +{'page' => $page, 'prev' => $prev, 'latest' => $latest};
+    return +{'page' => $page, 'prev' => $prev, 'orig' => $orig};
 }
 
 sub _select {
@@ -231,31 +244,19 @@ sub _select {
     return $h ? $self->new($h) : $self->empty($q);
 }
 
-sub _insert { return shift->_update(@_) }
-
-sub _update {
+sub _insert {
     my($self, $wiki) = @_;
-    my $page = $self;
-    if (! $page->id) {
-        $page = $page->new({%{$page}, 'rev' => 0});
-        $wiki->db->call('titles.insert', $page);
-        $page = $page->new({%{$page}, 'id' => $wiki->db->last_insert_id('titles.primary_key')});
+    return $self if $self->source eq q();
+    my $mine = $self;
+    if (! $mine->id) {
+        $mine = $mine->new({%{$mine}, 'rev' => 0});
+        $wiki->db->call('titles.insert', $mine);
+        my $id1 = $wiki->db->last_insert_id('titles.primary_key');
+        $mine = $mine->new({%{$mine}, 'id' => $id1});
     }
-    $wiki->db->call('sources.insert', $page);
-    $page = $page->new({%{$page}, 'rev' => $wiki->db->last_insert_id('sources.primary_key')});
-    return $page->_update_title_rel($wiki);
-}
-
-sub _delete {
-    my($self, $wiki) = @_;
-    $wiki->db->call('sources.delete', $self);
-    my $page = $self->_select($wiki, $self->title);
-    if ($page->rev > 0) {
-        $wiki->db->call('sources.delete', $page);
-        $wiki->db->call('sources.insert', $page);
-        $page = $page->new({%{$page}, 'rev' => $wiki->db->last_insert_id('sources.primary_key')});
-    }
-    return $page->_update_title_rel($wiki);
+    $wiki->db->call('sources.insert', $mine);
+    my $r1 = $wiki->db->last_insert_id('sources.primary_key');
+    return $mine->new({%{$mine}, 'rev' => $r1});
 }
 
 sub _update_title_rel {

@@ -228,7 +228,7 @@ sub _inline {
                     $self->rel->{$q} = $#{$page->rel};
                 }
                 my $esci = _uri_escape($self->rel->{$q});
-                my $escq = _htmlall_escape($q);
+                my $escq = _htmlstar_escape($q);
                 $t .= qq(<a href="$esci$escf" title="$escq">$escx</a>);
                 next;
             }

@@ -22,14 +22,16 @@ sub filters {
         'DEFAULT' => sub{ $wiki->page->see_title($wiki) },
         'ALL'     => sub{ $wiki->page->see_title($wiki, $wiki->all_title) },
         'RECENT'  => sub{ $wiki->page->see_title($wiki, $wiki->recent_title) },
-        'HISTORY?' => sub{ $wiki->page->is_rev($_[0]->rev) && $_[0]->rev },
+        'HISTORY?' => sub{ $_[0]->rev > 0 },
         'EDIT?' => sub{
             my($page) = @_;
-            $wiki->capability && $wiki->capability->allow($wiki, 'edit', undef, $page);
+            $page->rev >= 0 && $wiki->capability
+            && $wiki->capability->allow($wiki, 'edit', undef, $page);
         },
         'INSERT?' => sub{
             my($page) = @_;
-            $wiki->capability && $wiki->capability->allow($wiki, 'insert', undef, $page);
+            $page->rev >= 0 && $wiki->capability
+            && $wiki->capability->allow($wiki, 'insert', undef, $page);
         },
         'RESOLVE' => sub{
             my($page, $v) = @_;
@@ -182,8 +184,8 @@ sub call_id {
     my($self, $id) = @_;
     $self->env->{'REQUEST_METHOD'} eq 'GET' or return $self->see_other;
     my $wiki = $self->wiki;
-    my $h = $wiki->page->find($wiki, 'id', {'id' => $id})
-        or return $self->see_other;
+    my $h = $wiki->page->find($wiki, 'id', {'id' => $id});
+    return $self->see_other if ! $h;
     return $self->response('empty.html', $h) if ! $h->{'page'}->rev;
     my $res = $self->response('default.html', $h);
     return $self->add_etag('page' . $h->{'page'}->rev, $res);
@@ -193,20 +195,20 @@ sub call_id_rev {
     my($self, $id, $r) = @_;
     $self->env->{'REQUEST_METHOD'} eq 'GET' or return $self->see_other;
     my $wiki = $self->wiki;
-    my $h = $wiki->page->find($wiki, 'id_rev', {'id' => $id, 'rev' => $r})
-        or return $self->see_other;
-    return $self->see_other($h->{'page'}) if $h->{'page'}->rev <= 0;
-    return $self->see_rev($h->{'page'}) if $h->{'page'}->rev != $r;
+    my $h = $wiki->page->find($wiki, 'id_rev', {'id' => $id, 'rev' => $r});
+    return $self->see_other if ! $h;
+    return $self->see_other($h->{'orig'}) if $h->{'orig'}->rev <= 0;
+    return $self->see_rev($h->{'orig'}) if $h->{'orig'}->rev != $r;
     my $res = $self->response('rev.html', $h);
-    return $self->add_etag('rev' . $h->{'page'}->rev, $res);
+    return $self->add_etag('rev' . $h->{'orig'}->rev, $res);
 }
 
 sub call_id_history {
     my($self, $id) = @_;
     $self->env->{'REQUEST_METHOD'} eq 'GET' or return $self->see_other;
     my $wiki = $self->wiki;
-    my $h = $wiki->page->find_history($wiki, 'id', {'id' => $id})
-        or return $self->see_other;
+    my $h = $wiki->page->find_history($wiki, 'id', {'id' => $id});
+    return $self->see_other if ! $h;
     return $self->response('history.html', $h);
 }
 
@@ -214,10 +216,10 @@ sub post_edit {
     my($self, $q, $r) = @_;
     $r = $r eq q() ? undef : $r;
     my $wiki = $self->wiki;
-    my $h = $wiki->page->find_edit($wiki, {'title' => $q, 'rev' => $r})
-        or return $self->forbidden;
-    return $self->see_rev($h->{'page'}) if defined $r && $h->{'page'}->rev != $r;
-    return $self->response('editdeny.html', $h) if ! exists $h->{'latest'};
+    my $h = $wiki->page->find_edit($wiki, {'title' => $q, 'rev' => $r});
+    return $self->forbidden if ! $h;
+    return $self->see_rev($h->{'orig'}) if defined $r && $h->{'orig'}->rev != $r;
+    return $self->response('editdeny.html', $h) if ! exists $h->{'page'};
     return $self->response('edit.html', $h);
 }
 
@@ -229,7 +231,7 @@ sub post_write {
     my $h = $wiki->page->save($wiki, {
         'title' => $q, 'rev' => $r, 'source' => $t, 'remote' => $self->env->{'REMOTE_ADDR'},
     }) or return $self->forbidden;
-    return $self->response('conflict.html', $h, 409) if exists $h->{'your'};
+    return $self->response('conflict.html', $h, 409) if exists $h->{'mine'};
     return $self->see_other($h->{'page'});
 }
 

@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="robots" content="noindex,nofollow" />
-<title>編集 {{page title}}</title>
+<title>編集 {{orig title}}</title>
 <link rel="stylesheet" type="text/css" href="{{STATIC}}/style.css" />
 </head>
 <body>
 <header>
-<h1>編集 <a href="{{page LOCATION}}">{{page title}}</a></h1>
+<h1>編集 <a href="{{orig LOCATION}}">{{orig title}}</a></h1>
 </header>
 
 <form method="POST" action="{{SCRIPT}}/" enctype="multipart/form-data">
 <p><input type="hidden" name="c" value="w" />
-<input type="hidden" name="q" value="{{page title HTMLALL}}" />
-<input type="hidden" name="r" value="{{latest rev HTMLALL}}" />
+<input type="hidden" name="q" value="{{orig title HTMLALL}}" />
+<input type="hidden" name="r" value="{{page rev HTMLALL}}" />
 {{IF.1 user}}
 <input type="hidden" name="e" value="{{user token HTMLALL}}" />
 {{ENDIF.1}}
@@ -27,8 +27,8 @@
 <td><form method="GET" action="{{DEFAULT LOCATION}}">
 <input type="submit" value=" トップ " />
 </form></td>
-{{IF.1 page HISTORY? }}
-<td><form method="GET" action="{{page HISTORY}}">
+{{IF.1 orig HISTORY? }}
+<td><form method="GET" action="{{orig HISTORY}}">
 <input type="submit" value=" 編集履歴 " />
 </form></td>
 {{ENDIF.1}}
