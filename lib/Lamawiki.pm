@@ -65,9 +65,11 @@ sub find_authenticate {
 
 sub reload_interwiki {
     my($self) = @_;
-    return $self->new($self) if ! $self->interwiki;
-    my $page = $self->page->_select($self, $self->config->{'interwiki.title'});
-    my $interwiki = $self->interwiki->reload($page);
+    my $q = $self->config->{'interwiki.title'};
+    return $self->new($self) if ! $q || ! $self->interwiki;
+    my $page = $self->page->find_interwiki($self, $q);
+    my $h = $self->converter->scan_interwiki_servers($page);
+    my $interwiki = $self->interwiki->reload($h);
     return $self->new({%{$self}, 'interwiki' => $interwiki});
 }
 

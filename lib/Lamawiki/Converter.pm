@@ -100,6 +100,28 @@ sub _preprocess {
     return $s;
 }
 
+sub scan_interwiki_servers {
+    my($self, $page) = @_;
+    my $h = {};
+    my $s = $page->source;
+    return $self if $s eq q();
+    chomp $s; $s .= "\n";
+    $s =~ s/^```\n.*?\n```\n//gmsx;
+    while ($s =~ m{
+        ^[ ]*[?][ ]+(\p{Alnum}[\w\-.]*)[^\n]*\n+
+         [ ]*[:][ ]+(
+            https?://[0-9A-Za-z][0-9A-Za-z\-.]*(?:[:][0-9]*)?
+            (?:/(?:~?[0-9A-Za-z][0-9A-Za-z\-_.,;:*()&+\$%]*
+                   (?:/~?[0-9A-Za-z][0-9A-Za-z\-_.,;:*()&+\$%]*)*/?)?)?
+            (?:[?][0-9A-Za-z\-_=.,;:*()/&+\$%?]*)?
+            (?:\#[A-Za-z][0-9A-Za-z\-.:]*)?
+        )[^\n]*\n+
+    }gmsxo) {
+        $h->{$1} = $2;
+    }
+    return $h;
+}
+
 sub convert {
     my($self, $page) = @_;
     my $c = $self->new({%{$self}, 'rel' => {}, 'footnote' => {}, 'reflink' => {}});

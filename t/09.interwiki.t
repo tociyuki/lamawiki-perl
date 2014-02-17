@@ -83,27 +83,15 @@ can_ok 'Lamawiki::Interwiki', qw(new server reload resolve);
 {
     my $it = 'its reload';
 
-    my $page = Mock::Page->new({'source' => <<'EOS'});
-? plain     -- append last.
-: http://www.example.net/wiki?
-
-? default   -- UTF-8 in defaults.
-
-: http://www.example.net/wiki?title=$1&amp;command=browse
-
-? bareamp
-: http://www.example.net/wiki?title=$1&command=browse
-
-? utf8
-: http://www.example.net/wiki?$(1:utf8)
-? euc
-: http://www.example.net/wiki?$(1:euc)
-? jis
-: http://www.example.net/wiki?$(1:jis)
-? sjis
-: http://www.example.net/wiki?$(1:sjis)
-EOS
-    my $interwiki = Lamawiki::Interwiki->new->reload($page);
+    my $interwiki = Lamawiki::Interwiki->new->reload({
+        'plain' => 'http://www.example.net/wiki?',
+        'default' => 'http://www.example.net/wiki?title=$1&amp;command=browse',
+        'bareamp' => 'http://www.example.net/wiki?title=$1&command=browse',
+        'utf8' => 'http://www.example.net/wiki?$(1:utf8)',
+        'euc' => 'http://www.example.net/wiki?$(1:euc)',
+        'jis' => 'http://www.example.net/wiki?$(1:jis)',
+        'sjis' => 'http://www.example.net/wiki?$(1:sjis)',
+    });
 
     is_deeply $interwiki->server, {
         'plain' => 'http://www.example.net/wiki?',

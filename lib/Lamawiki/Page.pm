@@ -193,9 +193,7 @@ sub find {
     if (defined $q) {
         return if ! $self->is_title($q);
         return if $wiki->interwiki && $wiki->interwiki->resolve($q);
-        if ($wiki->generater->{$q}) {
-            return if $k eq 'id_rev' || $k eq 'title_rev';
-        }
+        return if $wiki->generater->{$q} && $k eq 'title_rev';
     }
     my($page, $prev, $orig);
     my $select_from_pages = $k eq 'id' || $k eq 'title' ? sub{
@@ -203,8 +201,11 @@ sub find {
         $page = $g ? $self->new($g) : $self->empty($q, $id);
         $page->{'rel'} = [];
         return if $page->rev <= 0;
-        my $a = $wiki->db->call('titles.select_id_rel', {'id' => $page->id});
-        @{$page->rel} = map { $self->new($_) } @{$a};
+        my $stx = $wiki->db->prepare('titles.select_id_rel');
+        $stx->execute({'id' => $page->id});
+        while (my $h = $stx->fetchrow) {
+            push @{$page->rel}, $self->new($h);
+        }
         return;
     }
     : $k eq 'id_rev' || $k eq 'title_rev' ? sub{
@@ -237,10 +238,9 @@ sub find {
     return +{'page' => $page, 'prev' => $prev, 'orig' => $orig};
 }
 
-sub _select {
-    my($self, $wiki, $q, $r) = @_;
-    $r = defined $r ? $r : $self->MAXREV;
-    my $h = $wiki->db->call('pages.select_title_rev', {'title' => $q, 'rev' => $r})->[0];
+sub find_interwiki {
+    my($self, $wiki, $q) = @_;
+    my $h = $wiki->db->call('pages.select_title', {'title' => $q})->[0];
     return $h ? $self->new($h) : $self->empty($q);
 }
 

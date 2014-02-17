@@ -7,6 +7,7 @@ use Lamawiki::Sqlite;
 use Lamawiki::Page;
 use Lamawiki::Interwiki;
 use Lamawiki::Liq;
+use Lamawiki::Converter;
 use Lamawiki::Layout;
 use Lamawiki::Controller;
 use lib qw(t/lib);
@@ -39,6 +40,7 @@ my $wiki = Lamawiki->new({
     }),
     'page' => Lamawiki::Page->new,
     'interwiki' => Lamawiki::Interwiki->new,
+    'converter' => Lamawiki::Converter->new,
 });
 
 {

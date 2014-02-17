@@ -10,30 +10,19 @@ use Test::More;
 
 plan tests => 3;
 
-my $interwiki_page = Lamawiki::Page->new({'source' => <<'EOS'});
-? plain     -- append last.
-: http://www.example.net/wiki?
-
-? default   -- UTF-8 in defaults.
-
-: http://www.example.net/wiki?title=$1&amp;command=browse
-
-? bareamp
-: http://www.example.net/wiki?title=$1&command=browse
-
-? utf8
-: http://www.example.net/wiki?$(1:utf8)
-? euc
-: http://www.example.net/wiki?$(1:euc)
-? jis
-: http://www.example.net/wiki?$(1:jis)
-? sjis
-: http://www.example.net/wiki?$(1:sjis)
-EOS
+my $server = {
+    'plain' => 'http://www.example.net/wiki?',
+    'default' => 'http://www.example.net/wiki?title=$1&amp;command=browse',
+    'bareamp' => 'http://www.example.net/wiki?title=$1&command=browse',
+    'utf8' => 'http://www.example.net/wiki?$(1:utf8)',
+    'euc' => 'http://www.example.net/wiki?$(1:euc)',
+    'jis' => 'http://www.example.net/wiki?$(1:jis)',
+    'sjis' => 'http://www.example.net/wiki?$(1:sjis)',
+};
 
 my $wiki = Lamawiki->new({
     'page' => Lamawiki::Page->new,
-    'interwiki' => Lamawiki::Interwiki->new->reload($interwiki_page),
+    'interwiki' => Lamawiki::Interwiki->new->reload($server),
 });
 my $liq = Lamawiki::Liq->new;
 my $view = $liq->merge_filters(

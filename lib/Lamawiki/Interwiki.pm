@@ -10,25 +10,7 @@ sub new  { return bless {%{$_[1] || +{}}}, ref $_[0] || $_[0] }
 sub server { return $_[0]{'server'} }
 
 sub reload {
-    my($self, $page) = @_;
-    my $h = {};
-    my($alnum, $alpha) = qw(0-9A-Za-z A-Za-z);
-    my $s = $page->source;
-    return $self if $s eq q();
-    chomp $s; $s .= "\n";
-    $s =~ s/^```\n.*?\n```\n//gmsx;
-    while ($s =~ m{
-        ^[ ]*[?][ ]+(\p{Alnum}[\w\-.]*)[^\n]*\n+
-         [ ]*[:][ ]+(
-            https?://[0-9A-Za-z][0-9A-Za-z\-.]*(?:[:][0-9]*)?
-            (?:/(?:~?[0-9A-Za-z][0-9A-Za-z\-_.,;:*()&+\$%]*
-                   (?:/~?[0-9A-Za-z][0-9A-Za-z\-_.,;:*()&+\$%]*)*/?)?)?
-            (?:[?][0-9A-Za-z\-_=.,;:*()/&+\$%?]*)?
-            (?:\#[A-Za-z][0-9A-Za-z\-.:]*)?
-        )[^\n]*\n+
-    }gmsxo) {
-        $h->{$1} = $2;
-    }
+    my($self, $h) = @_;
     return $self->new({'server' => $h});
 }
 
