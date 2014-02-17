@@ -114,7 +114,7 @@ sub find_edit {
     }
     else {
         my $f = $param->{'page'}->rev == 0 ? 'insert' : 'update';
-        if (! $wiki->capability->allow($wiki, $f, undef, $param->{'page'})) {
+        if (! $wiki->capability->allow($wiki, $f, $param->{'page'})) {
             delete $param->{'page'};
         }
     }

@@ -50,13 +50,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'master could link every domain name.',
+    });
     my $page = $it->page->new({
         'source' => 'master could link http://foo.com/ every domain name.',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");
@@ -99,13 +103,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'user could link every domain name.',
+    });
     my $page = $it->page->new({
         'source' => 'user could link http://foo.com/ every domain name.',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");
@@ -148,13 +156,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'anonymous could link limited.',
+    });
     my $page = $it->page->new({
         'source' => 'anonymous could link http://example.net/ limited.',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");
@@ -197,13 +209,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'anonymous could not link displeased',
+    });
     my $page = $it->page->new({
         'source' => 'anonymous could not link http://displeased.com/',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");
@@ -299,13 +315,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'anonymous could link example net',
+    });
     my $page = $it->page->new({
         'source' => 'anonymous could link http://example.net/',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");
@@ -348,13 +368,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'anonymous could link limited.',
+    });
     my $page = $it->page->new({
         'source' => 'anonymous could link http://example.net/ limited.',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");
@@ -397,13 +421,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'anonymous could link limited.',
+    });
     my $page = $it->page->new({
         'source' => 'anonymous could link http://example.net/ limited.',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");
@@ -446,13 +474,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'anonymous could link limited.',
+    });
     my $page = $it->page->new({
         'source' => 'anonymous could link http://example.net/ limited.',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");
@@ -496,13 +528,17 @@ BEGIN { use_ok 'Lamawiki::Capability' }
         [qw(All         edit 0 insert 0 update 0 delete 0)],
         [qw(Recent      edit 0 insert 0 update 0 delete 0)],
     );
+    my $orig = $it->page->new({
+        'source' => 'anonymous could link limited.',
+    });
     my $page = $it->page->new({
         'source' => 'anonymous could link http://example.net/ limited.',
     });
     for my $a (@spec) {
         my($title, @actions) = @{$a};
         while (my($action, $expected) = splice @actions, 0, 2) {
-            my $got = $it->capability->allow($it, $action, undef,
+            my $got = $it->capability->allow($it, $action,
+                $orig->new({%{$orig}, 'title' => $title}),
                 $page->new({%{$page}, 'title' => $title}));
             if (! $expected) {
                 ($got, $action) = (! $got, "not $action");

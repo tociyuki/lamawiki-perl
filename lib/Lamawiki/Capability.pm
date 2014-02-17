@@ -9,7 +9,7 @@ sub new { return bless +{%{$_[1] || +{}}}, ref $_[0] || $_[0] }
 sub allow {
     my($self, $wiki, $action, $orig, $page) = @_;
     my $role = $self->roleof($wiki, $wiki->user);
-    my $domain = $self->domainof($wiki, $page->title);
+    my $domain = $self->domainof($wiki, $orig->title);
     return if $domain eq 'readonly';
     return 1 if $role eq 'master';
     return if $role ne 'master'    and $domain eq 'private';
@@ -59,14 +59,13 @@ sub check_protect {
 
 sub count_deny_link {
     my($self, $wiki, $orig, $page) = @_;
+    return 0 if ! $page;
     my $uric = qr{[\w\#\$&'()*+,\-./:;=?\@~]|%[0-9A-Fa-f]{2}}msx;
     my %keep;
-    if ($orig) {
-        my $origsrc = $orig->source;
-        while ($origsrc =~ m{\b((?:ht|f)tps?://$uric+)}gmsx) {
-            my $uri = $1;
-            $keep{$uri} = 1;
-        }
+    my $origsrc = $orig->source;
+    while ($origsrc =~ m{\b((?:ht|f)tps?://$uric+)}gmsx) {
+        my $uri = $1;
+        $keep{$uri} = 1;
     }
     my $n = 0;
     my $lexauthority = qr{\A

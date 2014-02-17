@@ -11,7 +11,7 @@ plan tests => 39;
     package Mock::Capability;
     sub allow {
         my($self, $wiki, $action, $orig, $page) = @_;
-        return exists $wiki->generater->{$page->title} ? q() : 1;
+        return exists $wiki->generater->{$orig->title} ? q() : 1;
     }
 
     package Mock::Page;

@@ -25,13 +25,11 @@ sub filters {
         'HISTORY?' => sub{ $_[0]->rev > 0 },
         'EDIT?' => sub{
             my($page) = @_;
-            $page->rev >= 0 && $wiki->capability
-            && $wiki->capability->allow($wiki, 'edit', undef, $page);
+            $wiki->capability && $wiki->capability->allow($wiki, 'edit', $page);
         },
         'INSERT?' => sub{
             my($page) = @_;
-            $page->rev >= 0 && $wiki->capability
-            && $wiki->capability->allow($wiki, 'insert', undef, $page);
+            $wiki->capability && $wiki->capability->allow($wiki, 'insert', $page);
         },
         'RESOLVE' => sub{
             my($page, $v) = @_;
