@@ -199,7 +199,7 @@ sub find {
     my $select_from_pages = $k eq 'id' || $k eq 'title' ? sub{
         my $g = $wiki->db->call("pages.select_$k", $h)->[0];
         $page = $g ? $self->new($g) : $self->empty($q, $id);
-        $page->{'rel'} = [];
+        $page->rel([]);
         return if $page->rev <= 0;
         my $stx = $wiki->db->prepare('titles.select_id_rel');
         $stx->execute({'id' => $page->id});
