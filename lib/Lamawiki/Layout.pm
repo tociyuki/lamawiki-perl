@@ -27,6 +27,24 @@ sub filters {
             my $self = $class->new({'wiki' => $wiki, 'view' => $view});
             $self->layout($page, q(), {$page->title => 1});
         },
+        'HEADER?' => sub{ $wiki->page->see_title($wiki, '_Header')->rev },
+        'HEADER' => sub{
+            my($page, $view) = @_;
+            my $self = $class->new({'wiki' => $wiki, 'view' => $view});
+            $self->layout_include(q(), undef, '_Header', {});
+        },
+        'SIDEBAR?' => sub{ $wiki->page->see_title($wiki, '_Sidebar')->rev },
+        'SIDEBAR' => sub{
+            my($page, $view) = @_;
+            my $self = $class->new({'wiki' => $wiki, 'view' => $view});
+            $self->layout_include(q(), undef, '_Sidebar', {})
+        },
+        'FOOTER?' => sub{ $wiki->page->see_title($wiki, '_Footer')->rev },
+        'FOOTER' => sub{
+            my($page, $view) = @_;
+            my $self = $class->new({'wiki' => $wiki, 'view' => $view});
+            $self->layout_include(q(), undef, '_Footer', {})
+        },
     );
 }
 
