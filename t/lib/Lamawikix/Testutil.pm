@@ -38,9 +38,10 @@ sub ctl_get {
     my($ctl, $env, $now) = @_;
     my $env1 = +{
         'REQUEST_METHOD' => 'GET', 'SCRIPT_NAME' => q(), 'PATH_INFO' => q(/),
+        'HTTP_USER_AGENT' => 'Test/1.0', 'REMOTE_ADDR' => '127.0.0.1',
         %{$env},
     };
-    return $ctl->call($env1, $now || $ctl->wiki->now || scalar localtime);
+    return $ctl->call($env1, $now || $ctl->wiki->now || time);
 }
 
 sub ctl_post {
@@ -51,7 +52,7 @@ sub ctl_post {
     binmode $fh;
     my $env1 = +{
         'REQUEST_METHOD' => 'POST', 'SCRIPT_NAME' => q(), 'PATH_INFO' => q(/),
-        'REMOTE_ADDR' => '127.0.0.1',
+        'HTTP_USER_AGENT' => 'Test/1.0', 'REMOTE_ADDR' => '127.0.0.1',
         %{$env},
         'psgi.input' => $fh, 'CONTENT_LENGTH' => length $data,
     };
