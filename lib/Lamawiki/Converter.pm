@@ -104,7 +104,7 @@ sub scan_interwiki_servers {
     my($self, $page) = @_;
     my $h = {};
     my $s = $page->source;
-    return $self if $s eq q();
+    return $h if $s eq q();
     chomp $s; $s .= "\n";
     $s =~ s/^```\n.*?\n```\n//gmsx;
     while ($s =~ m{
