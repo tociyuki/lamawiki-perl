@@ -85,7 +85,8 @@ sub _for {
     my $a = $self->_lookup([split /\s+/msx, $t0], $param);
     $a = ref $a eq 'ARRAY' ? $a : [$a];
     return join q(), map {
-        $self->execute($t1, {%{$param}, $x => $a->[$_]})
+        local $param->{$x} = $a->[$_];
+        $self->execute($t1, $param)
     } 0 .. $#{$a};
 }
 
