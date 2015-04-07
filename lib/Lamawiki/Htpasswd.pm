@@ -8,7 +8,19 @@ use Digest::MD5 qw(md5);
 use Digest::SHA qw(hmac_sha256);
 use MIME::Base64 qw(encode_base64);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
+
+my $random_bytes;
+BEGIN{
+    if (! eval{
+        require Crypt::OpenSSL::Random;
+        $random_bytes = \&Crypt::OpenSSL::Random::random_bytes;
+        1;
+    }) {
+        require Crypt::URandom;
+        $random_bytes = \&Crypt::URandom::urandom;
+    }
+}
 
 sub new { return bless {%{$_[1]}}, ref $_[0] || $_[0] }
 sub path { return shift->{'path'} }
@@ -42,8 +54,7 @@ sub get {
 
 sub crypt_pbkdf2 {
     my($plain, $secret) = @_;
-    my @c64 = ('a' .. 'z', 'A' .. 'Z', '0' .. '9', '.', '/');
-    $secret ||= '$d8$10$' . (join q(), map { $c64[rand 64] } 1 .. 22);
+    $secret ||= '$d8$10$' . generate_salt(22);
     if ($secret =~ m{\A\$d8\$([12][0-9]?|3[0-1]?|[4-9])\$([a-zA-Z0-9./]{22})}msx) {
         my $cost = $1;
         my $salt = $2;
@@ -53,6 +64,13 @@ sub crypt_pbkdf2 {
         return '$d8$' . $cost . '$' . $salt . $b64;
     }
     return "not $secret";
+}
+
+sub generate_salt {
+    my($n) = @_;
+    $n ||= 22;
+    my @c64 = ('a' .. 'z', 'A' .. 'Z', '0' .. '9', '.', '/');
+    return join q(), map { $c64[$_ % 64] } unpack 'C*', $random_bytes->($n);
 }
 
 sub pbkdf2 {
@@ -203,7 +221,7 @@ Lamawiki::Htpasswd - check user password with htpasswd file
 
 =head1 VERSION
 
-0.03
+0.04
 
 =head1 AUTHOR
 
