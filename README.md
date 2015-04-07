@@ -62,7 +62,14 @@ Perl-5.8.9 以上と、 CPAN モジュールの Plack、 cpanm がインスト�
 
     $ prove -l t/*.t
 
-動作確認用に `webmaster` ユーザの MD5 パスワードをセットします。
+動作確認用に `webmaster` ユーザの PBKDF2 HMAC SHA256 パスワードをセットします。
+折り返して書いてますが、一行で打ち込みます。
+
+    $ perl -I./lib -MLamawiki::Htpasswd \
+      -E 'say "webmaster:".Lamawiki::Htpasswd::crypt_pbkdf2("YOURPASSWORD")' \
+      > data/wikipasswd
+
+もはや非推奨ですが、 htpasswd の MD5 crypt パスワードを使うこともできます。
 
     $ htpasswd -cm data/wikipasswd webmaster
 

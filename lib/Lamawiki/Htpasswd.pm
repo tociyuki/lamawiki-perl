@@ -24,7 +24,7 @@ sub check {
 
 sub get {
     my($self, $username) = @_;
-    my $secret = q();
+    my $secret = q(not found);
     my $path = $self->path;
     open my($fh), '<:encoding(utf-8)', $path or croak "cannot open '$path'. $!";
     binmode $fh;
@@ -52,7 +52,7 @@ sub crypt_pbkdf2 {
         $b64 =~ tr/+/./;
         return '$d8$' . $cost . '$' . $salt . $b64;
     }
-    return '?';
+    return "not $secret";
 }
 
 sub pbkdf2 {

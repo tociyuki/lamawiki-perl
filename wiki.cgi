@@ -156,7 +156,9 @@ wiki.cgi - a wiki-engine
 
 =head1 SYNOPSIS
 
-    $ htpasswd -cm data/wikipasswd webmaster
+    $ perl -I./lib -MLamawiki::Htpasswd \
+      -E 'say "webmaster:".Lamawiki::Htpasswd::crypt_pbkdf2("YOURPASSWORD")' \
+        > data/wikipasswd
     $ plackup wiki.cgi
 
     $ firefox http://localhost:5000/signin
@@ -167,7 +169,7 @@ MIZUTANI Tociyuki
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2014, MIZUTANI Tociyuki C<< <tociyuki@gmail.com> >>.
+Copyright (c) 2015, MIZUTANI Tociyuki C<< <tociyuki@gmail.com> >>.
 All rights reserved.
 
 This module is free software; you can redistribute it and/or
