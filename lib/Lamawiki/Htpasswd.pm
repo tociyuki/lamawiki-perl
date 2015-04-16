@@ -73,6 +73,8 @@ sub generate_salt {
     return join q(), map { $c64[$_ % 64] } unpack 'C*', $random_bytes->($n);
 }
 
+# Password-Based Key Derivation Function 2 (PBKDF2)
+# see RFC 2898 PKCS#5 version 2.0
 sub pbkdf2 {
     my($prf, $password, $salt, $c, $dklen) = @_;
     my $dk = q();

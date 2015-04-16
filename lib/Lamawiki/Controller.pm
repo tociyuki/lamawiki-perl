@@ -291,7 +291,7 @@ sub body_parameters {
     my $hphrase = qr/"([^"]+)"|([^\s;]+)/msxo;
     my $fb = Encode::FB_CROAK|Encode::LEAVE_SRC;
     my $bnd = ($env->{'CONTENT_TYPE'} || q())
-        =~ m{\Amultipart/form-data.*?\bboundary=$hphrase}msx ? $+ : return +{};
+        =~ m{\Amultipart/form-data.*?\bboundary=$hphrase}msx ? quotemeta $+ : return +{};
     my $length = $env->{'CONTENT_LENGTH'} or return +{};
     $length <= $maxpost or return +{};
     read $env->{'psgi.input'}, my($s), $length or return +{};
