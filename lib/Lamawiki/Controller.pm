@@ -286,17 +286,26 @@ sub query_parameters {
     return $param;
 }
 
+my $token = qr{[!\#\$%&\'*+\-.^_`\|~0-9A-Za-z]+}msx;
+my $quoted = qr{
+    "[\t \x21\x23-\x5b\x5d-\x7e]*
+     (?:\\[\t\x20-\x7e][\t \x21\x23-\x5b\x5d-\x7e]*)*"}msx;
+my $hparameter = qr{(?:[ \t]*;[ \t]*$token=(?:$token|$quoted))*}msx;
+my $lexmultipart = qr{[ \t]*(?i:multipart/form-data)$hparameter[ \t]*}msx;
+my $lexdisposition = qr{
+    (?i:Content-Disposition):[ \t]*(?i:form-data)($hparameter)[ \t]*}msx;
+
 sub body_parameters {
     my($env, $param, $maxpost) = @_;
     my $fb = Encode::FB_CROAK|Encode::LEAVE_SRC;
     # see RFC 7230 3.2.6. token and quoted-string
     #   we reject quoted-string with quoted-pair
-    my $hattr = qr{"([ \x21\x23-\x5b\x5c-\x7e]+)"
-                    | ([!\#\$%&\'*+\-.^_`\|~0-9A-Za-z]+)}msxo;
+    my $hattr = qr{"([ \x21\x23-\x5b\x5d-\x7e]+)"|($token)}msxo;
     my $ctype = $env->{'CONTENT_TYPE'} || q();
+    $ctype =~ s/\x0d\x0a[ \t]+/ /gmsx;
     my $bnd;
-    if ($ctype =~ m{\A(?i:multipart/form-data)[ \t\x0d\x0a]*;}msx) {
-        if ($ctype =~ m{;[ \t\x0d\x0a]*(?i:boundary)=$hattr[ \t\x0d\x0a]*(?:;|\z)}msx) {
+    if ($ctype =~ m{\A$lexmultipart\z}msx) {
+        if ($ctype =~ m{;[ \t]*(?i:boundary)=$hattr[ \t]*(?:;|\z)}msx) {
             $bnd = quotemeta $+;
         }
     }
@@ -309,7 +318,7 @@ sub body_parameters {
     while ($s =~ m/$part/gcmsx) {
         my($h, $v, $e) = ($1, $2, $3);
         $h =~ s/\x0d\x0a([ \t]+)/$1 ? q( ) : "\n"/gmsx;
-        my $t = $h =~ m/^(?i:Content-Disposition:\s+form-data);([^\n]*)/msx ? $1 : q();
+        my $t = $h =~ m/^$lexdisposition/msx ? $1 : q();
         return +{} if $t =~ m/\s(?i:filename)=/msx;
         my $k = $t =~ m/\s(?i:name)=$hattr/msx ? $+ : return +{};
         $v =~ s/\x0d\x0a/\n/gmsx;
