@@ -305,7 +305,7 @@ sub body_parameters {
     $ctype =~ s/\x0d\x0a[ \t]+/ /gmsx;
     my $bnd;
     if ($ctype =~ m{\A$lexmultipart\z}msx) {
-        if ($ctype =~ m{;[ \t]*(?i:boundary)=$hattr[ \t]*(?:;|\z)}msx) {
+        if ($ctype =~ m{;\s*(?i:boundary)=$hattr}msx) {
             $bnd = quotemeta $+;
         }
     }
