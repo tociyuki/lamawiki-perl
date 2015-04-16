@@ -296,7 +296,7 @@ sub body_parameters {
     my $ctype = $env->{'CONTENT_TYPE'} || q();
     my $bnd;
     if ($ctype =~ m{\A(?i:multipart/form-data)[ \t\x0d\x0a]*;}msx) {
-        if ($ctype =~ m{;[ \t\x0d\x0a]*(?:boundary)=$hattr[ \t\x0d\x0a]*(?:;|\z)}msx) {
+        if ($ctype =~ m{;[ \t\x0d\x0a]*(?i:boundary)=$hattr[ \t\x0d\x0a]*(?:;|\z)}msx) {
             $bnd = quotemeta $+;
         }
     }
