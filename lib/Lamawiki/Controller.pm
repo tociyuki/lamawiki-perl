@@ -286,30 +286,16 @@ sub query_parameters {
     return $param;
 }
 
-my $token = qr{[!\#\$%&\'*+\-.^_`\|~0-9A-Za-z]+}msx;
-my $qstr = qr{[\t \x21\x23-\x5b\x5d-\x7e]*
-     (?:\\[\t\x20-\x7e][\t \x21\x23-\x5b\x5d-\x7e]*)*}msx;
-
 sub body_parameters {
     my($env, $param, $maxpost) = @_;
     my $fb = Encode::FB_CROAK|Encode::LEAVE_SRC;
-    # see RFC 7230 3.2.6. token and quoted-string
-    #   we reject quoted-string with quoted-pair
     my $ctype = $env->{'CONTENT_TYPE'} || q();
     $ctype =~ s/\x0d\x0a[ \t]+/ /gmsx;
-    my $bnd;
-    if ($ctype =~ m{\A[ \t]*(?i:multipart/form-data)}gcmsx) {
-        while ($ctype =~ m{\G[ \t]*;[ \t]*($token)=(?:($token)|"($qstr)")}gcmsx) {
-            my($k, $v) = ($1, $+);
-            if (defined $3) {
-                $v =~ s/\\(.)/$1/gmsx;
-            }
-            if ('boundary' eq lc $k) {
-                $bnd = $v;
-            }
-        }
+    my %ct;
+    if ($ctype =~ m{\A[ \t]*(?i:multipart/form-data)([^\n]*)}msx) {
+        %ct = content_header_parameters ($1);
     }
-    defined $bnd or return +{};
+    my $bnd = exists $ct{'boundary'} ? $ct{'boundary'} : return +{};
     my $length = $env->{'CONTENT_LENGTH'} or return +{};
     $length <= $maxpost or return +{};
     read $env->{'psgi.input'}, my($s), $length or return +{};
@@ -320,14 +306,7 @@ sub body_parameters {
         $h =~ s/\x0d\x0a([ \t]+)/$1 ? q( ) : "\n"/gmsx;
         my %cd;
         if ($h =~ m{^(?i:content-disposition):[ ~\t]*(?i:form-data)([^\n]*)}msx) {
-            my $t = $1;
-            while ($t =~ m{\G[ \t]*;[ \t]*($token)=(?:($token)|"($qstr)")}gcmsx) {
-                my($k1, $v1) = ($1, $+);
-                if (defined $3) {
-                    $v1 =~ s/\\(.)/$1/gmsx;
-                }
-                $cd{lc $k1} = $v1;
-            }
+            %cd = content_header_parameters ($1);
         }
         return +{} if exists $cd{'filename'};
         my $k = exists $cd{'name'} ? $cd{'name'} : return +{};
@@ -337,6 +316,24 @@ sub body_parameters {
         last if $e;
     }
     return $param;
+}
+
+# see RFC 7230 3.2.6. token and quoted-string
+my $token = qr{[!\#\$%&\'*+\-.^_`\|~0-9A-Za-z]+}msx;
+my $qstr = qr{[\t \x21\x23-\x5b\x5d-\x7e]*
+     (?:\\[\t\x20-\x7e][\t \x21\x23-\x5b\x5d-\x7e]*)*}msx;
+
+sub content_header_parameters {
+    my($t) = @_;
+    my %h;
+    while ($t =~ m{\G[ \t]*;[ \t]*($token)=(?:($token)|"($qstr)")}gcmsx) {
+        my($k, $v) = ($1, $+);
+        if (defined $3) {
+            $v =~ s/\\(.)/$1/gmsx;
+        }
+        $h{lc $k} = $v;
+    }
+    return %h;
 }
 
 1;
