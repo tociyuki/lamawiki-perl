@@ -287,26 +287,26 @@ sub query_parameters {
 }
 
 my $token = qr{[!\#\$%&\'*+\-.^_`\|~0-9A-Za-z]+}msx;
-my $quoted = qr{
-    "[\t \x21\x23-\x5b\x5d-\x7e]*
-     (?:\\[\t\x20-\x7e][\t \x21\x23-\x5b\x5d-\x7e]*)*"}msx;
-my $hparameter = qr{(?:[ \t]*;[ \t]*$token=(?:$token|$quoted))*}msx;
-my $lexmultipart = qr{[ \t]*(?i:multipart/form-data)$hparameter[ \t]*}msx;
-my $lexdisposition = qr{
-    (?i:Content-Disposition):[ \t]*(?i:form-data)($hparameter)[ \t]*}msx;
+my $qstr = qr{[\t \x21\x23-\x5b\x5d-\x7e]*
+     (?:\\[\t\x20-\x7e][\t \x21\x23-\x5b\x5d-\x7e]*)*}msx;
 
 sub body_parameters {
     my($env, $param, $maxpost) = @_;
     my $fb = Encode::FB_CROAK|Encode::LEAVE_SRC;
     # see RFC 7230 3.2.6. token and quoted-string
     #   we reject quoted-string with quoted-pair
-    my $hattr = qr{"([ \x21\x23-\x5b\x5d-\x7e]+)"|($token)}msxo;
     my $ctype = $env->{'CONTENT_TYPE'} || q();
     $ctype =~ s/\x0d\x0a[ \t]+/ /gmsx;
     my $bnd;
-    if ($ctype =~ m{\A$lexmultipart\z}msx) {
-        if ($ctype =~ m{;\s*(?i:boundary)=$hattr}msx) {
-            $bnd = quotemeta $+;
+    if ($ctype =~ m{\A[ \t]*(?i:multipart/form-data)}gcmsx) {
+        while ($ctype =~ m{\G[ \t]*;[ \t]*($token)=(?:($token)|"($qstr)")}gcmsx) {
+            my($k, $v) = ($1, $+);
+            if (defined $3) {
+                $v =~ s/\\(.)/$1/gmsx;
+            }
+            if ('boundary' eq lc $k) {
+                $bnd = $v;
+            }
         }
     }
     defined $bnd or return +{};
@@ -318,9 +318,19 @@ sub body_parameters {
     while ($s =~ m/$part/gcmsx) {
         my($h, $v, $e) = ($1, $2, $3);
         $h =~ s/\x0d\x0a([ \t]+)/$1 ? q( ) : "\n"/gmsx;
-        my $t = $h =~ m/^$lexdisposition/msx ? $1 : q();
-        return +{} if $t =~ m/;\s*(?i:filename)=/msx;
-        my $k = $t =~ m/;\s*(?i:name)=$hattr/msx ? $+ : return +{};
+        my %cd;
+        if ($h =~ m{^(?i:content-disposition):[ ~\t]*(?i:form-data)([^\n]*)}msx) {
+            my $t = $1;
+            while ($t =~ m{\G[ \t]*;[ \t]*($token)=(?:($token)|"($qstr)")}gcmsx) {
+                my($k1, $v1) = ($1, $+);
+                if (defined $3) {
+                    $v1 =~ s/\\(.)/$1/gmsx;
+                }
+                $cd{lc $k1} = $v1;
+            }
+        }
+        return +{} if exists $cd{'filename'};
+        my $k = exists $cd{'name'} ? $cd{'name'} : return +{};
         $v =~ s/\x0d\x0a/\n/gmsx;
         eval{ $v = decode('UTF-8', $v, $fb); 1; } or return +{};
         $param->{$k} = $v;
