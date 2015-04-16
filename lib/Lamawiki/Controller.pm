@@ -288,7 +288,10 @@ sub query_parameters {
 
 sub body_parameters {
     my($env, $param, $maxpost) = @_;
-    my $hphrase = qr/"([^"]+)"|([^\s;]+)/msxo;
+    # see RFC 7230 3.2.6. token and quoted-string
+    #   we reject quoted-string with quoted-pair
+    my $hphrase = qr{"([\x20\x21\x23-\x5b\x5c-\x7e]+)"
+                    | ([!\#\$%&\'*+\-.^_`\|~0-9A-Za-z]+)}msxo;
     my $fb = Encode::FB_CROAK|Encode::LEAVE_SRC;
     my $bnd = ($env->{'CONTENT_TYPE'} || q())
         =~ m{\Amultipart/form-data.*?\bboundary=$hphrase}msx ? quotemeta $+ : return +{};
