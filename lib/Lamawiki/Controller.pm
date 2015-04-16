@@ -319,8 +319,8 @@ sub body_parameters {
         my($h, $v, $e) = ($1, $2, $3);
         $h =~ s/\x0d\x0a([ \t]+)/$1 ? q( ) : "\n"/gmsx;
         my $t = $h =~ m/^$lexdisposition/msx ? $1 : q();
-        return +{} if $t =~ m/\s(?i:filename)=/msx;
-        my $k = $t =~ m/\s(?i:name)=$hattr/msx ? $+ : return +{};
+        return +{} if $t =~ m/;\s*(?i:filename)=/msx;
+        my $k = $t =~ m/;\s*(?i:name)=$hattr/msx ? $+ : return +{};
         $v =~ s/\x0d\x0a/\n/gmsx;
         eval{ $v = decode('UTF-8', $v, $fb); 1; } or return +{};
         $param->{$k} = $v;
