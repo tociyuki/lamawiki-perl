@@ -288,13 +288,19 @@ sub query_parameters {
 
 sub body_parameters {
     my($env, $param, $maxpost) = @_;
+    my $fb = Encode::FB_CROAK|Encode::LEAVE_SRC;
     # see RFC 7230 3.2.6. token and quoted-string
     #   we reject quoted-string with quoted-pair
     my $hphrase = qr{"([\x20\x21\x23-\x5b\x5c-\x7e]+)"
                     | ([!\#\$%&\'*+\-.^_`\|~0-9A-Za-z]+)}msxo;
-    my $fb = Encode::FB_CROAK|Encode::LEAVE_SRC;
-    my $bnd = ($env->{'CONTENT_TYPE'} || q())
-        =~ m{\Amultipart/form-data.*?\bboundary=$hphrase}msx ? quotemeta $+ : return +{};
+    my $ctype = $env->{'CONTENT_TYPE'} || q();
+    my $bnd;
+    if ($ctype =~ m{\Amultipart/form-data[ \t\x0d\x0a]*;}msx) {
+        if ($ctype =~ m{;[ \t\x0d\x0a]*boundary=$hphrase[ \t\x0d\x0a]*(?:;|\z)}msx) {
+            $bnd = quotemeta $+;
+        }
+    }
+    defined $bnd or return +{};
     my $length = $env->{'CONTENT_LENGTH'} or return +{};
     $length <= $maxpost or return +{};
     read $env->{'psgi.input'}, my($s), $length or return +{};
