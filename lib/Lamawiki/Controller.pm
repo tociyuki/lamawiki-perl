@@ -291,12 +291,12 @@ sub body_parameters {
     my $fb = Encode::FB_CROAK|Encode::LEAVE_SRC;
     # see RFC 7230 3.2.6. token and quoted-string
     #   we reject quoted-string with quoted-pair
-    my $hphrase = qr{"([\x20\x21\x23-\x5b\x5c-\x7e]+)"
+    my $hattr = qr{"([ \x21\x23-\x5b\x5c-\x7e]+)"
                     | ([!\#\$%&\'*+\-.^_`\|~0-9A-Za-z]+)}msxo;
     my $ctype = $env->{'CONTENT_TYPE'} || q();
     my $bnd;
-    if ($ctype =~ m{\Amultipart/form-data[ \t\x0d\x0a]*;}msx) {
-        if ($ctype =~ m{;[ \t\x0d\x0a]*boundary=$hphrase[ \t\x0d\x0a]*(?:;|\z)}msx) {
+    if ($ctype =~ m{\A(?i:multipart/form-data)[ \t\x0d\x0a]*;}msx) {
+        if ($ctype =~ m{;[ \t\x0d\x0a]*(?:boundary)=$hattr[ \t\x0d\x0a]*(?:;|\z)}msx) {
             $bnd = quotemeta $+;
         }
     }
@@ -309,9 +309,9 @@ sub body_parameters {
     while ($s =~ m/$part/gcmsx) {
         my($h, $v, $e) = ($1, $2, $3);
         $h =~ s/\x0d\x0a([ \t]+)/$1 ? q( ) : "\n"/gmsx;
-        my $t = $h =~ m/^Content-Disposition:\s+form-data;([^\n]*)/msx ? $1 : q();
-        return +{} if $t =~ m/\sfilename=/msx;
-        my $k = $t =~ m/\sname=$hphrase/msx ? $+ : return +{};
+        my $t = $h =~ m/^(?i:Content-Disposition:\s+form-data);([^\n]*)/msx ? $1 : q();
+        return +{} if $t =~ m/\s(?i:filename)=/msx;
+        my $k = $t =~ m/\s(?i:name)=$hattr/msx ? $+ : return +{};
         $v =~ s/\x0d\x0a/\n/gmsx;
         eval{ $v = decode('UTF-8', $v, $fb); 1; } or return +{};
         $param->{$k} = $v;
