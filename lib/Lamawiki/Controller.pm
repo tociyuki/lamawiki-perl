@@ -333,7 +333,8 @@ sub content_header_parameters {
         }
         $h{lc $k} = $v;
     }
-    return %h;
+    return %h if $t =~ m{\G\s*\z}gcmsx;
+    return ();
 }
 
 1;
