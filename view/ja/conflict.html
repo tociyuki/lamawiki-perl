@@ -20,13 +20,13 @@
 
 <p>あなたが保存しようとした内容:</p>
 
-<div><textarea id="mine-text" name="t" style="width: 100%; height: 5em">{{mine source HTMLALL}}</textarea></div>
+<div><textarea id="mine-text" name="t">{{mine source HTMLALL}}</textarea></div>
 </div>
 
 <div id="conflict-orig-source">
 <p>編集開始時の元の内容:</p>
 
-<div><textarea id="orig-text" name="t" style="width: 100%; height: 5em">{{orig source HTMLALL}}</textarea></div>
+<div><textarea id="orig-text" name="t">{{orig source HTMLALL}}</textarea></div>
 </div>
 
 <div id="your">
@@ -41,14 +41,14 @@
 {{IF.1 user}}
 <input type="hidden" name="e" value="{{user token HTMLALL}}" />
 {{ENDIF.1}}
-<textarea id="your-text" name="t" style="width: 100%; height: 20em">{{page source HTMLALL}}</textarea><br />
+<textarea id="your-text" name="t">{{page source HTMLALL}}</textarea><br />
 <input type="submit" value=" Save " /></p>
 </form>
 </div>
 
 <div id="conflict-marker">
 <p>衝突マーカーの意味:</p>
-<pre style="padding-right: 32px"><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 あなたが保存した内容
 |||||||
 元の内容

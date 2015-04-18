@@ -14,10 +14,22 @@ a:active { color: #FF0000; text-decoration: none }
 header h1 a:link { color: black }
 header h1 a:visited { color: black }
 
+div.firbidden { text-align: center; font-size: 76px; margin-bottom: 32px }
+
+table.signin-form-tbl { margin-bottom: 2em }
+table.signin-form-tbl td.signin-form-submit { text-align: right }
+
 #source { margin-left: 32px; margin-right: 32px; font-family: monospace }
 #source div.line { color: #111111 }
 #source div.ins { background-color: #ddffdd }
 #source div.del { background-color: #ffdddd }
+
+textarea#mine-text { width: 100%; height: 5em }
+textarea#orig-text { width: 100%; height: 5em }
+textarea#your-text { width: 100%; height: 20em }
+textarea[name="t"]  { width: 100%; height: 20em }
+
+div#conflict-marker pre { padding-right: 32px }
 
 ins { text-decoration: none; background-color: #ddffdd; }
 del { text-decoration: none; background-color: #ffdddd; }
