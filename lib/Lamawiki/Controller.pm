@@ -253,6 +253,9 @@ sub response {
         'Content-Type' => 'text/html; charset=utf-8',
         'Content-Length' => length $body,
         'Content-Security-Policy' => q(default-src 'self'),
+        'X-Content-Type-Options' => q("nosniff"),
+        'X-XSS-Protection' => '1; mode=block',
+        'X-Frame-Options' => 'DENY',
     ], [$body]];
 }
 
