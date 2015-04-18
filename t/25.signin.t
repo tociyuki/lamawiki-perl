@@ -166,7 +166,7 @@ EOS
         'alice should POST /signin {name:alice} => Set-Cookie';
     like $headers{'Set-Cookie'}, qr/\As=[^;]/msx,
         'alice should POST /signin {name:alice} => Set-Cookie: s=...';
-    $alice_sesskey = $headers{'Set-Cookie'};
+    ($alice_sesskey) = $headers{'Set-Cookie'} =~ m/\A(s=[^;]+)/msx;
     is_deeply $res->[2], [],
         'alice should POST {c:w, q:Top, r:0} => no body';
 }
@@ -337,7 +337,7 @@ EOS
         'carol should POST /signin {name:carol} => Set-Cookie';
     like $headers{'Set-Cookie'}, qr/\As=[^;]/msx,
         'carol should POST /signin {name:carol} => Set-Cookie: s=...';
-    $carol_sesskey = $headers{'Set-Cookie'};
+    ($carol_sesskey) = $headers{'Set-Cookie'} =~ m/\A(s=[^;]+)/msx;
     is_deeply $res->[2], [],
         'carol should POST {c:w, q:Top, r:0} => no body';
 }

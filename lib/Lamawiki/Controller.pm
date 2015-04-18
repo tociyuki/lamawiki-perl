@@ -111,7 +111,7 @@ sub call {
     );
     my $c = $self->new({%{$self}, 'wiki' => $m, 'view' => $v, 'env' => $env});
     if (defined $cookie{'s'} && ! $m->user && $env->{'REQUEST_METHOD'} eq 'POST') {
-        return $self->set_cookie('s=; expires=Thu, 01-Jan-1970 00:00:00 GMT', $c->forbidden);
+        return $c->set_cookie('s=; expires=Thu, 01-Jan-1970 00:00:00 GMT', $c->forbidden);
     }
     my $path = $env->{'PATH_INFO'} || q(/);
     eval{
@@ -265,6 +265,10 @@ sub add_etag {
 
 sub set_cookie {
     my($self, $s, $res) = @_;
+    $s .= '; HttpOnly';
+    if ($self->env->{'psgi.url_scheme'} eq 'https') {
+        $s .= '; Secure';
+    }
     return [$res->[0], [@{$res->[1]}, 'Set-Cookie' => $s], $res->[2]];
 }
 

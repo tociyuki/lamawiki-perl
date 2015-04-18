@@ -37,6 +37,10 @@ sub split_spec {
 sub ctl_get {
     my($ctl, $env, $now) = @_;
     my $env1 = +{
+        'psgi.version' => [1, 1],
+        'psgi.url_scheme' => 'http',
+        'psgi.multithread' => 0, 'psgi.multiprocess' => 0, 'psgi.run_once' => 1,
+        'psgi.streaming' => 0, 'psgi.nonblocking' => 0,
         'REQUEST_METHOD' => 'GET', 'SCRIPT_NAME' => q(), 'PATH_INFO' => q(/),
         'HTTP_USER_AGENT' => 'Test/1.0', 'REMOTE_ADDR' => '127.0.0.1',
         %{$env},
@@ -51,6 +55,10 @@ sub ctl_post {
     open my($fh), '<', \$data;
     binmode $fh;
     my $env1 = +{
+        'psgi.version' => [1, 1],
+        'psgi.url_scheme' => 'http',
+        'psgi.multithread' => 0, 'psgi.multiprocess' => 0, 'psgi.run_once' => 1,
+        'psgi.streaming' => 0, 'psgi.nonblocking' => 0,
         'REQUEST_METHOD' => 'POST', 'SCRIPT_NAME' => q(), 'PATH_INFO' => q(/),
         'HTTP_USER_AGENT' => 'Test/1.0', 'REMOTE_ADDR' => '127.0.0.1',
         %{$env},

@@ -117,7 +117,13 @@ sub make_wiki_engine {
 if ($ENV{'GATEWAY_INTERFACE'}) { # CGI
     my $engine = make_wiki_engine($CONFIG);
     binmode STDIN; binmode STDOUT; binmode STDERR;
-    my $env = {%ENV, 'psgi.input' => *STDIN, 'psgi.errors' => *STDERR};
+    my $https = $ENV{'HTTPS'} || 'off';
+    my $env = {%ENV,
+        'psgi.version' => [1, 1],
+        'psgi.url_scheme' => $https =~ m/\A(?:on|1)\z/imsx ? 'https' : 'http',
+        'psgi.input' => *STDIN, 'psgi.errors' => *STDERR,
+        'psgi.multithread' => 0, 'psgi.multiprocess' => 0, 'psgi.run_once' => 1,
+        'psgi.streaming' => 0, 'psgi.nonblocking' => 0};
     $env->{'PATH_INFO'} ||= q(); # see Plack::Handler::CGI
     if ($env->{'SCRIPT_NAME'} eq q(/)) {
         $env->{'SCRIPT_NAME'} = q();
