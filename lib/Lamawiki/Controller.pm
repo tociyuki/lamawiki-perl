@@ -252,6 +252,7 @@ sub response {
     return [$status || 200, [
         'Content-Type' => 'text/html; charset=utf-8',
         'Content-Length' => length $body,
+        'Content-Security-Policy' => q(default-src 'self'),
     ], [$body]];
 }
 
