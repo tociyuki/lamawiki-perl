@@ -111,7 +111,7 @@ sub call {
     );
     my $c = $self->new({%{$self}, 'wiki' => $m, 'view' => $v, 'env' => $env});
     if (defined $cookie{'s'} && ! $m->user && $env->{'REQUEST_METHOD'} eq 'POST') {
-        return $c->set_cookie('s=; expires=Thu, 01-Jan-1970 00:00:00 GMT', $c->forbidden);
+        return $c->set_cookie('s=; expires=Thu, 01 Jan 1970 00:00:00 GMT', $c->forbidden);
     }
     my $path = $env->{'PATH_INFO'} || q(/);
     eval{
@@ -154,7 +154,7 @@ sub call_signout {
     my($self) = @_;
     my $wiki = $self->wiki;
     $wiki->user && $wiki->user->signout($wiki);
-    return $self->set_cookie('s=; expires=Thu, 01-Jan-1970 00:00:00 GMT', $self->see_other);
+    return $self->set_cookie('s=; expires=Thu, 01 Jan 1970 00:00:00 GMT', $self->see_other);
 }
 
 sub call_root {
