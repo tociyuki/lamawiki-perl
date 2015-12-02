@@ -234,7 +234,7 @@ CREATE UNIQUE INDEX sources_history ON sources(id,rev);
 CREATE UNIQUE INDEX sources_remote ON sources(remote,rev);
 ENDSQL
 
-'sources.primary_key' => [undef, undef, 'pages', 'rev'],
+'sources.primary_key' => [undef, undef, 'sources', 'rev'],
 
 'sources.insert' => [<<'ENDSQL', undef, qw(id posted remote source)],
 INSERT INTO sources(id,posted,remote,source) VALUES (?,?,?,?);
