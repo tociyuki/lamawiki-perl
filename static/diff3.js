@@ -208,7 +208,13 @@ Diff3.prototype.diff = function(a, b) {
         i, n;
 
     uniqs = this._build_uniq_index(a, b, [[a_length, b_length]]);
-    uniqs.sort(function(u, v){ return u[0] - v[0] });
+    uniqs.sort(function(u, v){
+        if (u[0] < v[0] && u[1] < v[1])
+            return -1;
+        if (u[0] == v[0] && u[1] == v[1])
+            return 0;
+        return +1;
+    });
     while (a1 < a_length && b1 < b_length && a[a1] == b[b1]) {
         ++a1;
         ++b1;
@@ -351,6 +357,8 @@ Diff3.prototype._build_uniq_index = function(a, b, uniqs) {
 
 // change log
 //
+// 0.06: Wed Dec  2 16:05:10 2015 UTC
+//   fix: diff sort uniqs with both a and b.
 // 0.05: Tue Nov  5 05:23:53 2013 UTC
 //   change: diff_to_html: wiki-like output.
 //   change: escape_html replaces ' ' to '&#8194;' (&ensp;) also.
